@@ -1,3 +1,4 @@
+import 'package:emarting/screens/shopMainScreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,8 +27,19 @@ class MyApp extends StatelessWidget {
         primarySwatch: MaterialColor(0xFF2196F3, color),
         accentColor: Color.fromRGBO(241, 227, 125, 1),
         canvasColor: Color.fromRGBO(255, 254, 229, 1),
+        fontFamily: 'Raleway',
+          textTheme: ThemeData.light().textTheme.copyWith(
+              body1: TextStyle(color: Color.fromRGBO(20, 51, 51, 1)),
+              body2: TextStyle(
+                  color: Color.fromRGBO(20, 51, 51, 1),
+                  fontWeight: FontWeight.bold),
+              title: TextStyle(
+                fontSize: 24.5,
+                fontFamily: 'RobotoCondensed',
+                fontWeight: FontWeight.bold,
+              )),
       ),
-      home: MyHomePage(title: 'EMarting'),
+      home: ShopMainScreen(),
     );
   }
 }
