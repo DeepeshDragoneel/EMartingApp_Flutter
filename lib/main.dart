@@ -1,3 +1,4 @@
+import 'package:emarting/screens/productDetailsScreen.dart';
 import 'package:emarting/screens/shopMainScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'EMarting',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: MaterialColor(0xFF2196F3, color),
         accentColor: Color.fromRGBO(241, 227, 125, 1),
@@ -40,6 +42,9 @@ class MyApp extends StatelessWidget {
               )),
       ),
       home: ShopMainScreen(),
+      routes: {
+        '/productDetails': (context)=> ProductDetailesScreen(),
+      },
     );
   }
 }
