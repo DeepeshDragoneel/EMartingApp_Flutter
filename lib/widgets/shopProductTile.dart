@@ -42,7 +42,8 @@ class ShopProductTile extends StatelessWidget {
                       color: Colors.transparent,
                       child: new InkWell(
                         onTap: () {
-                          Navigator.of(context).pushNamed('/productDetails');
+                          Navigator.of(context).pushNamed('/productDetails',
+                              arguments: this.id);
                         },
                       ))),
             ])),
