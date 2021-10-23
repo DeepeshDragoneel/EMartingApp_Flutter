@@ -1,4 +1,6 @@
+import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
+import 'package:emarting/widgets/badge.dart';
 import 'package:emarting/widgets/shopProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +24,13 @@ class ShopMainScreen extends StatelessWidget {
             },
             icon: Icon(Icons.favorite_outline_sharp, color: Colors.white),
             color: Colors.red,
-          )
+          ),
+          Consumer<CartItems>(builder: (context, cartData, child) {
+            return Badge(
+                child: child as Widget,
+                value: cartData.cartItemsLength.toString());
+          }, child: IconButton(
+                    onPressed: () {}, icon: Icon(Icons.shopping_bag_outlined)),),
         ],
         // backgroundColor: Colors.white,
       ),

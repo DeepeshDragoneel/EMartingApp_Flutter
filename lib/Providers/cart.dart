@@ -22,6 +22,10 @@ class CartItems with ChangeNotifier {
     return {..._cartItems};
   }
 
+  int get cartItemsLength {
+    return _cartItems.length;
+  }
+
   void addItems(String productId, String name, String imageURL, double price) {
     if (_cartItems.containsKey(productId)) {
       _cartItems.update(
@@ -42,5 +46,6 @@ class CartItems with ChangeNotifier {
               quantity: 1,
               price: price));
     }
+    notifyListeners();
   }
 }
