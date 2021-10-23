@@ -41,13 +41,24 @@ class Products with ChangeNotifier {
     return [..._products];
   }
 
-  Product findProductById(String id){
-    return _products
-        .firstWhere((product) => product.id == id);
+  Product findProductById(String id) {
+    return _products.firstWhere((product) => product.id == id);
   }
 
-  List<Product> getFavProducts(){
+  List<Product> getFavProducts() {
     return [..._products.where((product) => product.isFav)];
+  }
+
+  void removeFavProduct(String id) {
+    List<Product> favProducts = _products.where((product) => product.isFav).toList();
+    // print('hi');
+    favProducts.forEach((product) {
+      if (product.id == id) {
+        product.isFav = false;
+      }
+    });
+    notifyListeners();
+    // return [..._products.where((product) => product.isFav)];
   }
 
   void addProduct() {
