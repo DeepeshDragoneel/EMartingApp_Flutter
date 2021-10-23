@@ -1,42 +1,72 @@
+import 'package:emarting/Providers/product.dart';
+import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FooterProductDetails extends StatelessWidget {
-  const FooterProductDetails({Key? key}) : super(key: key);
+  // const FooterProductDetails({Key? key}) : super(key: key);
 
+  final String productId;
+
+  FooterProductDetails(this.productId);
   @override
   Widget build(BuildContext context) {
+    // final favProductInfo = Provider.of<Products>(context, listen: false)
+    //     .findProductById(productId);
+    final favProductInfo = Provider.of<Product>(context);
     return Row(children: [
       Expanded(
-          child: Container(
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                primary: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
-                    side: BorderSide(color: Colors.black))),
-            onPressed: () {},
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.favorite_outline_sharp,
-                    color: Colors.black, size: 20),
-                Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Text('Favorite',
-                      style: TextStyle(color: Colors.black, fontSize: 20)),
-                ),
-              ],
-            )),
-      )),
+        child: Container(
+            decoration:
+                BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
+            margin: EdgeInsets.symmetric(horizontal: 2),
+            child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    primary: Colors.white,
+                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(0),
+                    )),
+                onPressed: () {
+                  favProductInfo.changeFav();
+                },
+                child: (!favProductInfo.isFav)
+                    ? (Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.favorite_outline_sharp,
+                              color: Colors.black, size: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text('WishList',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                        ],
+                      ))
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.favorite, color: Colors.red, size: 20),
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: Text('Wishlisted',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 20)),
+                          ),
+                        ],
+                      ))),
+      ),
       Expanded(
           child: Container(
+        decoration:
+            BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
+        margin: EdgeInsets.symmetric(horizontal: 2),
         child: ElevatedButton(
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
-                  side: BorderSide(color: Colors.black12),
                 )),
             onPressed: () {},
             child: Row(

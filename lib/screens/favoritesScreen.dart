@@ -19,7 +19,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     void removeFavProduct(var id) {
       Provider.of<Products>(context, listen: false).removeFavProduct(id);
     }
-
     return Scaffold(
         appBar: AppBar(
           title: Text('Favorites'),

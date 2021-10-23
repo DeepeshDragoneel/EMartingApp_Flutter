@@ -17,7 +17,7 @@ class Product with ChangeNotifier{
       this.isFav = false});
 
   void changeFav(){
-    isFav= !isFav;
+    isFav = !isFav;
     notifyListeners();
   }
 }

@@ -44,14 +44,17 @@ class Products with ChangeNotifier {
   Product findProductById(String id) {
     return _products.firstWhere((product) => product.id == id);
   }
+  int findProductIdx(String id) {
+    return _products.indexWhere((product) => product.id == id);
+  }
 
   List<Product> getFavProducts() {
     return [..._products.where((product) => product.isFav)];
   }
 
   void removeFavProduct(String id) {
-    List<Product> favProducts = _products.where((product) => product.isFav).toList();
-    // print('hi');
+    List<Product> favProducts =
+        _products.where((product) => product.isFav).toList();
     favProducts.forEach((product) {
       if (product.id == id) {
         product.isFav = false;

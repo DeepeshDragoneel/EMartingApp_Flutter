@@ -9,8 +9,10 @@ class ShopProductTile extends StatelessWidget {
   // final String name;
   // final String desc;
   // final String id;
+  final int idx;
 
   // ShopProductTile(this.id, this.name, this.desc, this.imageURL);
+  ShopProductTile(this.idx);
 
   @override
   Widget build(BuildContext context) {

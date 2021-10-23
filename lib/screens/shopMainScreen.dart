@@ -25,12 +25,15 @@ class ShopMainScreen extends StatelessWidget {
             icon: Icon(Icons.favorite_outline_sharp, color: Colors.white),
             color: Colors.red,
           ),
-          Consumer<CartItems>(builder: (context, cartData, child) {
-            return Badge(
-                child: child as Widget,
-                value: cartData.cartItemsLength.toString());
-          }, child: IconButton(
-                    onPressed: () {}, icon: Icon(Icons.shopping_bag_outlined)),),
+          Consumer<CartItems>(
+            builder: (context, cartData, child) {
+              return Badge(
+                  child: child as Widget,
+                  value: cartData.cartItemsLength.toString());
+            },
+            child: IconButton(
+                onPressed: () {}, icon: Icon(Icons.shopping_bag_outlined)),
+          ),
         ],
         // backgroundColor: Colors.white,
       ),
@@ -46,11 +49,12 @@ class ShopMainScreen extends StatelessWidget {
                 // create: (context) => shopProducts[index],
                 value: shopProducts[index],
                 child: ShopProductTile(
-                    // shopProducts[index].id,
-                    // shopProducts[index].name,
-                    // shopProducts[index].desc,
-                    // shopProducts[index].imageURL),
-                    ));
+                  index,
+                  // shopProducts[index].id,
+                  // shopProducts[index].name,
+                  // shopProducts[index].desc,
+                  // shopProducts[index].imageURL),
+                ));
           },
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

@@ -13,6 +13,10 @@ class ProductDetailesScreen extends StatelessWidget {
 
     final productDetails = Provider.of<Products>(context, listen: false)
         .findProductById(productDetailsArgs);
+    final productData = Provider.of<Products>(context);
+    final shopProducts = productData.products;
+    final productIdx = Provider.of<Products>(context, listen: false)
+        .findProductIdx(productDetailsArgs);
 
     return Scaffold(
       appBar: AppBar(title: Text(productDetails.name)),
@@ -23,7 +27,10 @@ class ProductDetailesScreen extends StatelessWidget {
       //       icon: Icon(Icons.shopping_bag_outlined), title: Text('Favorite')),
       // ]),
       persistentFooterButtons: [
-        FooterProductDetails(),
+        ChangeNotifierProvider.value(
+          value: shopProducts[productIdx],
+          child: FooterProductDetails(productDetails.id),
+        )
       ],
     );
   }
