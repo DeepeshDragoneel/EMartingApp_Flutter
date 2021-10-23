@@ -1,4 +1,6 @@
-class Product {
+import 'package:flutter/material.dart';
+
+class Product with ChangeNotifier{
   final String id;
   final String name;
   final String desc;
@@ -13,4 +15,9 @@ class Product {
       required this.price,
       required this.imageURL,
       this.isFav = false});
+
+  void changeFav(){
+    isFav= !isFav;
+    notifyListeners();
+  }
 }

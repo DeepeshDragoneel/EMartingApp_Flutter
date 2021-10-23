@@ -1,7 +1,8 @@
+import 'package:emarting/screens/favoritesScreen.dart';
 import 'package:emarting/widgets/shopProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/product.dart';
+import '../Providers/product.dart';
 import '../Providers/products.dart';
 
 class ShopMainScreen extends StatelessWidget {
@@ -12,7 +13,19 @@ class ShopMainScreen extends StatelessWidget {
     final productData = Provider.of<Products>(context);
     final shopProducts = productData.products;
     return Scaffold(
-      appBar: AppBar(title: Text("EMarting")),
+      appBar: AppBar(
+        title: Text("EMarting"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed('/favoriteProducts');
+            },
+            icon: Icon(Icons.favorite_outline_sharp, color: Colors.white),
+            color: Colors.red,
+          )
+        ],
+        // backgroundColor: Colors.white,
+      ),
       body: Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -21,11 +34,15 @@ class ShopMainScreen extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           itemCount: shopProducts.length,
           itemBuilder: (context, index) {
-            return ShopProductTile(
-                shopProducts[index].id,
-                shopProducts[index].name,
-                shopProducts[index].desc,
-                shopProducts[index].imageURL);
+            return ChangeNotifierProvider.value(
+                // create: (context) => shopProducts[index],
+                value: shopProducts[index],
+                child: ShopProductTile(
+                    // shopProducts[index].id,
+                    // shopProducts[index].name,
+                    // shopProducts[index].desc,
+                    // shopProducts[index].imageURL),
+                    ));
           },
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

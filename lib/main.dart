@@ -1,3 +1,4 @@
+import 'package:emarting/screens/favoritesScreen.dart';
 import 'package:emarting/screens/productDetailsScreen.dart';
 import 'package:emarting/screens/shopMainScreen.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
         home: ShopMainScreen(),
         routes: {
           '/productDetails': (context)=> ProductDetailesScreen(),
+          '/favoriteProducts': (context)=> FavoritesScreen(),
         },
       ),
     );

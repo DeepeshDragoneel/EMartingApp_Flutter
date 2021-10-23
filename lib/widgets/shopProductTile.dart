@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../Providers/product.dart';
 
 class ShopProductTile extends StatelessWidget {
   // const ShopProductTile({ Key? key }) : super(key: key);
 
-  final String imageURL;
-  final String name;
-  final String desc;
-  final String id;
+  // final String imageURL;
+  // final String name;
+  // final String desc;
+  // final String id;
 
-  ShopProductTile(this.id, this.name, this.desc, this.imageURL);
+  // ShopProductTile(this.id, this.name, this.desc, this.imageURL);
 
   @override
   Widget build(BuildContext context) {
+    final productInfo = Provider.of<Product>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -33,7 +36,7 @@ class ShopProductTile extends StatelessWidget {
                   // border: Border.all(color: Colors.black),
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: NetworkImage(imageURL),
+                    image: NetworkImage(productInfo.imageURL),
                   ),
                 ),
               ),
@@ -43,7 +46,7 @@ class ShopProductTile extends StatelessWidget {
                       child: new InkWell(
                         onTap: () {
                           Navigator.of(context).pushNamed('/productDetails',
-                              arguments: this.id);
+                              arguments: productInfo.id);
                         },
                       ))),
             ])),
@@ -56,20 +59,30 @@ class ShopProductTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    name,
+                    productInfo.name,
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.body2,
                   ),
-                  Container(
-                      // decoration: BoxDecoration(
-                      //   border: Border.all(color: Colors.blue, width: 4),
-                      //   color: Colors.yellow,
-                      //   shape: BoxShape.circle,
-                      // ),
-                      child: IconButton(
-                    onPressed: null,
-                    icon: Icon(Icons.favorite_border),
-                  )),
+                  Consumer<Product>(
+                    builder: (context, product, child) => Container(
+                        // decoration: BoxDecoration(
+                        //   border: Border.all(color: Colors.blue, width: 4),
+                        //   color: Colors.yellow,
+                        //   shape: BoxShape.circle,
+                        // ),
+                        child: IconButton(
+                      onPressed: () {
+                        productInfo.changeFav();
+                      },
+                      icon: Icon(
+                          productInfo.isFav
+                              ? (Icons.favorite)
+                              : (Icons.favorite_border),
+                          color: (productInfo.isFav
+                              ? (Colors.red)
+                              : (Colors.black))),
+                    )),
+                  ),
                 ],
               ),
             )
