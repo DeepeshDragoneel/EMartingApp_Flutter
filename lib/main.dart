@@ -35,7 +35,6 @@ class MyApp extends StatelessWidget {
           create: (context) => CartItems()),
         ChangeNotifierProvider(
           create: (context) => Orders()),
-        )
       ],
       child: MaterialApp(
         title: 'EMarting',
