@@ -102,7 +102,7 @@ class CartItemTile extends StatelessWidget {
                         ),
                         Text('₹ ${quantity * price}',
                             style: TextStyle(
-                                fontFamily: 'RobotoCondensed',
+                                fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15)),
                       ],
