@@ -2,6 +2,7 @@ import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class FooterProductDetails extends StatelessWidget {
@@ -29,6 +30,7 @@ class FooterProductDetails extends StatelessWidget {
                       borderRadius: BorderRadius.circular(0),
                     )),
                 onPressed: () {
+                  HapticFeedback.heavyImpact();
                   favProductInfo.changeFav();
                 },
                 child: (!favProductInfo.isFav)
@@ -71,6 +73,7 @@ class FooterProductDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(0),
                 )),
             onPressed: () {
+              HapticFeedback.heavyImpact();
               if (!cartItemData.getCartAdded(favProductInfo.id)) {
                 cartItemData.addItems(
                     favProductInfo.id,
@@ -78,6 +81,15 @@ class FooterProductDetails extends StatelessWidget {
                     favProductInfo.desc,
                     favProductInfo.imageURL,
                     favProductInfo.price);
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Item added to Bag!'),
+                    duration: Duration(seconds: 2),
+                    action: SnackBarAction(
+                        label: 'UNDO',
+                        onPressed: () {
+                          cartItemData.removeSingleCartItem(favProductInfo.id);
+                        })));
               } else {
                 Navigator.of(context).pushNamed('/cart');
               }

@@ -1,5 +1,6 @@
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
+import 'package:emarting/widgets/appDrawer.dart';
 import 'package:emarting/widgets/badge.dart';
 import 'package:emarting/widgets/shopProductTile.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,14 @@ class ShopMainScreen extends StatelessWidget {
             childAspectRatio: 0.75,
           ),
         ),
+      ),
+      drawer: Theme(
+        data: Theme.of(context).copyWith(
+          canvasColor:
+              Colors.white, //This will change the drawer background to blue.
+          //other styles
+        ),
+        child: AppDrawer(),
       ),
     );
   }

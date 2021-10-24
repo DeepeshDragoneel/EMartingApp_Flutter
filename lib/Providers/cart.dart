@@ -28,7 +28,8 @@ class CartItems with ChangeNotifier {
     return _cartItems.length;
   }
 
-  void addItems(String productId, String name,String desc, String imageURL, double price) {
+  void addItems(String productId, String name, String desc, String imageURL,
+      double price) {
     if (_cartItems.containsKey(productId)) {
       _cartItems.update(
           productId,
@@ -53,9 +54,28 @@ class CartItems with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeCartItem(String productId){
-     _cartItems.remove(productId);
-     notifyListeners();
+  void removeCartItem(String productId) {
+    _cartItems.remove(productId);
+    notifyListeners();
+  }
+
+  void removeSingleCartItem(String productId) {
+    if (_cartItems.containsKey(productId)) {
+      if (_cartItems[productId]!.quantity > 1) {
+        _cartItems.update(
+            productId,
+            (value) => CartItem(
+                id: value.id,
+                desc: value.desc,
+                name: value.name,
+                imageURL: value.imageURL,
+                quantity: value.quantity - 1,
+                price: value.price));
+      } else {
+        _cartItems.remove(productId);
+      }
+      notifyListeners();
+    }
   }
 
   bool getCartAdded(String productId) {

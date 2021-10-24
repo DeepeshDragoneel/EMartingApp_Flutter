@@ -29,7 +29,7 @@ dependencies:
     cupertino_icons: ^1.0.2
     flutter_svg: ^0.17.4
     provider: ^6.0.1
-    intl: ^0.15.8
+    intl: ^0.17.0
 
 dev_dependencies:
     flutter_test:

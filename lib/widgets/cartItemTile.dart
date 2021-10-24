@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/cart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -35,6 +36,27 @@ class CartItemTile extends StatelessWidget {
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
         cartItems.removeCartItem(productId);
+      },
+      confirmDismiss: (direction) {
+        return showCupertinoModalPopup(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Text('Move from Bag?'),
+                  content: Text(
+                      'Are you sure you want to remove this item from the bag?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                        },
+                        child: Text('No')),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(true);
+                        },
+                        child: Text('Yes')),
+                  ],
+                ));
       },
       child: Card(
         margin: EdgeInsets.symmetric(vertical: 3),
@@ -83,7 +105,29 @@ class CartItemTile extends StatelessWidget {
                                     size: 23,
                                   ),
                                   onPressed: () {
-                                    cartItems.removeCartItem(productId);
+                                    showCupertinoModalPopup(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                              title: Text('Move from Bag?'),
+                                              content: Text(
+                                                  'Are you sure you want to remove this item from the bag?'),
+                                              actions: [
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(false);
+                                                    },
+                                                    child: Text('No')),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Navigator.of(context)
+                                                          .pop(true);
+                                                      cartItems.removeCartItem(
+                                                          productId);
+                                                    },
+                                                    child: Text('Yes')),
+                                              ],
+                                            ));
                                   })
                             ]),
                         SizedBox(

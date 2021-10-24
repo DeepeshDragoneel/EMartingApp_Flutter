@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/cart.dart';
+import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/widgets/cartItemTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -64,16 +65,24 @@ class CartScreen extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           child: Row(children: [
-            Expanded(
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      padding: EdgeInsets.all(15),
-                    ),
-                    onPressed:
-                        (cartItemsInfo.cartItemsLength != 0) ? () {} : null,
-                    child: Text('PLACE ORDER',
-                        style: TextStyle(
-                            fontFamily: 'RobotoCondensed', fontSize: 15)))),
+            Expanded(child:
+                Consumer<Orders>(builder: (context, orderData, consumerChild) {
+              return ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(15),
+                  ),
+                  onPressed: (cartItemsInfo.cartItemsLength != 0)
+                      ? () {
+                          orderData.addOrder(
+                              cartItemsInfo.cartItems.values.toList(),
+                              cartItemsInfo.getTotalPrice);
+                          cartItemsInfo.clearCartItems();
+                        }
+                      : null,
+                  child: Text('PLACE ORDER',
+                      style: TextStyle(
+                          fontFamily: 'RobotoCondensed', fontSize: 15)));
+            })),
           ]),
         )
       ],

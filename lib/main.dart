@@ -2,6 +2,8 @@ import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
+import 'package:emarting/screens/myProductScreen.dart';
+import 'package:emarting/screens/ordersScreen.dart';
 import 'package:emarting/screens/productDetailsScreen.dart';
 import 'package:emarting/screens/shopMainScreen.dart';
 import 'package:flutter/material.dart';
@@ -60,6 +62,8 @@ class MyApp extends StatelessWidget {
           '/productDetails': (context) => ProductDetailesScreen(),
           '/favoriteProducts': (context) => FavoritesScreen(),
           '/cart': (context) => CartScreen(),
+          '/orders': (context) => OrderScreen(),
+          '/myProducts': (context) => MyProductScreen(),
         },
       ),
     );
