@@ -71,4 +71,9 @@ class CartItems with ChangeNotifier {
         (value, cartItem) => totalPrice += cartItem.price * cartItem.quantity);
     return totalPrice;
   }
+
+  void clearCartItems() {
+    _cartItems.clear();
+    notifyListeners();
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/cart.dart';
+import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
 import 'package:emarting/screens/productDetailsScreen.dart';
@@ -31,7 +32,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => Products()),
         ChangeNotifierProvider(
-          create: (context) => CartItems(),
+          create: (context) => CartItems()),
+        ChangeNotifierProvider(
+          create: (context) => Orders()),
         )
       ],
       child: MaterialApp(
