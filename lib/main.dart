@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/cart.dart';
+import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
 import 'package:emarting/screens/productDetailsScreen.dart';
 import 'package:emarting/screens/shopMainScreen.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/productDetails': (context) => ProductDetailesScreen(),
           '/favoriteProducts': (context) => FavoritesScreen(),
+          '/cart': (context) => CartScreen(),
         },
       ),
     );

@@ -71,8 +71,16 @@ class FooterProductDetails extends StatelessWidget {
                   borderRadius: BorderRadius.circular(0),
                 )),
             onPressed: () {
-              cartItemData.addItems(favProductInfo.id, favProductInfo.name,
-                  favProductInfo.imageURL, favProductInfo.price);
+              if (!cartItemData.getCartAdded(favProductInfo.id)) {
+                cartItemData.addItems(
+                    favProductInfo.id,
+                    favProductInfo.name,
+                    favProductInfo.desc,
+                    favProductInfo.imageURL,
+                    favProductInfo.price);
+              } else {
+                Navigator.of(context).pushNamed('/cart');
+              }
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,

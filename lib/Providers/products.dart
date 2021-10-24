@@ -14,7 +14,8 @@ class Products with ChangeNotifier {
     Product(
       id: 'p2',
       name: 'Trousers',
-      desc: 'A nice pair of trousers.',
+      desc:
+          'A nice pair of trousers. wear it to feel the fabric, we bet you wont regret!',
       price: 59.99,
       imageURL:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
@@ -44,6 +45,7 @@ class Products with ChangeNotifier {
   Product findProductById(String id) {
     return _products.firstWhere((product) => product.id == id);
   }
+
   int findProductIdx(String id) {
     return _products.indexWhere((product) => product.id == id);
   }

@@ -20,12 +20,7 @@ class ProductDetailesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: Text(productDetails.name)),
-      // bottomNavigationBar: BottomNavigationBar(items: [
-      //   BottomNavigationBarItem(
-      //       icon: Icon(Icons.favorite), title: Text('Favorite')),
-      //   BottomNavigationBarItem(
-      //       icon: Icon(Icons.shopping_bag_outlined), title: Text('Favorite')),
-      // ]),
+      
       persistentFooterButtons: [
         ChangeNotifierProvider.value(
           value: shopProducts[productIdx],

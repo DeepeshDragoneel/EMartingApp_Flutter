@@ -32,7 +32,10 @@ class ShopMainScreen extends StatelessWidget {
                   value: cartData.cartItemsLength.toString());
             },
             child: IconButton(
-                onPressed: () {}, icon: Icon(Icons.shopping_bag_outlined)),
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/cart');
+                },
+                icon: Icon(Icons.shopping_bag_outlined)),
           ),
         ],
         // backgroundColor: Colors.white,
