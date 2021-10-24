@@ -48,4 +48,11 @@ class CartItems with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  bool getCartAdded(String productId){
+    if(_cartItems.containsKey(productId)){
+      return true;
+    }
+    return false;
+  }
 }

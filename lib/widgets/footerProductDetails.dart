@@ -1,3 +1,4 @@
+import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
@@ -62,13 +63,17 @@ class FooterProductDetails extends StatelessWidget {
         decoration:
             BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
         margin: EdgeInsets.symmetric(horizontal: 2),
-        child: ElevatedButton(
+        child: Consumer<CartItems>(
+          builder: (context, cartItemData, consumerChild) => ElevatedButton(
             style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(0),
                 )),
-            onPressed: () {},
+            onPressed: () {
+              cartItemData.addItems(favProductInfo.id, favProductInfo.name,
+                  favProductInfo.imageURL, favProductInfo.price);
+            },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -76,11 +81,16 @@ class FooterProductDetails extends StatelessWidget {
                     color: Colors.white, size: 20),
                 Padding(
                   padding: const EdgeInsets.all(4),
-                  child: Text('Add to Bag',
-                      style: TextStyle(color: Colors.white, fontSize: 20)),
+                  child: (!cartItemData.getCartAdded(favProductInfo.id)
+                      ? Text('Add to Bag',
+                          style: TextStyle(color: Colors.white, fontSize: 20))
+                      : Text('Go to Bag',
+                          style: TextStyle(color: Colors.white, fontSize: 20))),
                 ),
               ],
-            )),
+            ),
+          ),
+        ),
       )),
     ]);
   }
