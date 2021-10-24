@@ -20,8 +20,17 @@ class MyProductTile extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.edit, color: Colors.blue)),
-              IconButton(onPressed: () {}, icon: Icon(Icons.delete, color: Colors.red,)),
+              IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed('/editProduct');
+                  },
+                  icon: Icon(Icons.edit, color: Colors.blue)),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  )),
             ],
           ),
         ));
