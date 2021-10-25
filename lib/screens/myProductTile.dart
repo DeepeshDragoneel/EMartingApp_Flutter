@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 class MyProductTile extends StatelessWidget {
   // const MyProductTile({ Key? key }) : super(key: key);
 
+  final String id;
   final String name;
   final String imageURL;
 
-  MyProductTile(this.name, this.imageURL);
+  MyProductTile(this.id, this.name, this.imageURL);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,8 @@ class MyProductTile extends StatelessWidget {
             children: [
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).pushNamed('/editProduct');
+                    Navigator.of(context)
+                        .pushNamed('/editProduct', arguments: id);
                   },
                   icon: Icon(Icons.edit, color: Colors.blue)),
               IconButton(

@@ -18,10 +18,39 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editedProduct =
       Product(id: '', name: '', price: 0, desc: '', imageURL: '', isFav: false);
 
+  var _initValue = {
+    'name': '',
+    'desc': '',
+    'imageURL': '',
+    'price': '',
+  };
+
   @override
   void initState() {
     _imageUrlFocusNode.addListener(_updateImagePreview);
     super.initState();
+  }
+
+  bool firstTime = true;
+
+  @override
+  void didChangeDependencies() {
+    if (firstTime) {
+      final editingProductId = ModalRoute.of(context)!.settings.arguments;
+      if (editingProductId != null) {
+        firstTime = false;
+        _editedProduct = Provider.of<Products>(context, listen: false)
+            .findProductById(editingProductId as String);
+        _initValue = {
+          'name': _editedProduct.name,
+          'desc': _editedProduct.desc,
+          'imageURL': _editedProduct.imageURL,
+          'price': _editedProduct.price.toString(),
+        };
+        _imageURLPreviewController.text = _editedProduct.imageURL;
+      }
+    }
+    super.didChangeDependencies();
   }
 
   @override
@@ -54,7 +83,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
     final productProvider = Provider.of<Products>(context, listen: false);
     _form.currentState!.save();
-    productProvider.addProduct(_editedProduct);
+    if (_editedProduct.id != '') {
+      productProvider.updateProducts(_editedProduct.id, _editedProduct);
+    } else {
+      productProvider.addProduct(_editedProduct);
+    }
     Navigator.of(context).pop();
   }
 
@@ -70,6 +103,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: ListView(
               children: [
                 TextFormField(
+                    initialValue: _initValue['name'],
                     decoration: InputDecoration(labelText: 'Title'),
                     textInputAction: TextInputAction.next,
                     onSaved: (value) {
@@ -78,7 +112,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         desc: _editedProduct.desc,
                         imageURL: _editedProduct.imageURL,
                         price: _editedProduct.price,
-                        id: '',
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
                       );
                     },
                     validator: (value) {
@@ -88,6 +123,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       return null;
                     }),
                 TextFormField(
+                    initialValue: _initValue['price'],
                     decoration: InputDecoration(labelText: 'Price'),
                     keyboardType: TextInputType.number,
                     textInputAction: TextInputAction.next,
@@ -97,7 +133,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         desc: _editedProduct.desc,
                         imageURL: _editedProduct.imageURL,
                         price: double.parse(value as String),
-                        id: '',
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
                       );
                     },
                     validator: (value) {
@@ -113,6 +150,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       return null;
                     }),
                 TextFormField(
+                    initialValue: _initValue['desc'],
                     decoration: InputDecoration(labelText: 'Description'),
                     maxLines: 3,
                     keyboardType: TextInputType.multiline,
@@ -122,7 +160,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         desc: value as String,
                         imageURL: _editedProduct.imageURL,
                         price: _editedProduct.price,
-                        id: '',
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
                       );
                     },
                     validator: (value) {
@@ -161,7 +200,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               desc: _editedProduct.desc,
                               imageURL: value as String,
                               price: _editedProduct.price,
-                              id: '',
+                              id: _editedProduct.id,
+                              isFav: _editedProduct.isFav,
                             );
                           },
                           // validator: (value) {

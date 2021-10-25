@@ -12,7 +12,13 @@ class MyProductScreen extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Your Products'),
-          actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed('/editProduct');
+                },
+                icon: const Icon(Icons.add))
+          ],
         ),
         backgroundColor: Colors.white,
         body: Padding(
@@ -20,9 +26,13 @@ class MyProductScreen extends StatelessWidget {
             child: ListView.builder(
               itemBuilder: (context, index) {
                 return Column(children: [
-                  MyProductTile(productsInfo.products[index].name,
+                  MyProductTile(
+                      productsInfo.products[index].id,
+                      productsInfo.products[index].name,
                       productsInfo.products[index].imageURL),
-                  Divider(color: Colors.black54,),
+                  Divider(
+                    color: Colors.black54,
+                  ),
                 ]);
               },
               itemCount: productsInfo.products.length,

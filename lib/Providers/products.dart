@@ -66,6 +66,20 @@ class Products with ChangeNotifier {
     // return [..._products.where((product) => product.isFav)];
   }
 
+  void updateProducts(String id, Product product) {
+    final updateindProductIdx =
+        _products.indexWhere((product) => product.id == id);
+    if (updateindProductIdx >= 0) {
+      print('Updating products! ${updateindProductIdx}');
+      _products[updateindProductIdx] = product;
+    }
+    notifyListeners();
+  }
+
+  void deleteProductById(String id){
+    
+  }
+
   void addProduct(Product product) {
     final newProduct = Product(
         id: DateTime.now().toString(),
