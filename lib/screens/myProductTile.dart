@@ -1,4 +1,6 @@
+import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MyProductTile extends StatelessWidget {
   // const MyProductTile({ Key? key }) : super(key: key);
@@ -28,7 +30,10 @@ class MyProductTile extends StatelessWidget {
                   },
                   icon: Icon(Icons.edit, color: Colors.blue)),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Provider.of<Products>(context, listen: false)
+                        .deleteProductById(id);
+                  },
                   icon: Icon(
                     Icons.delete,
                     color: Colors.red,
