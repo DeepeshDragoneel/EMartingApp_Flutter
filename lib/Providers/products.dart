@@ -66,7 +66,14 @@ class Products with ChangeNotifier {
     // return [..._products.where((product) => product.isFav)];
   }
 
-  void addProduct() {
+  void addProduct(Product product) {
+    final newProduct = Product(
+        id: DateTime.now().toString(),
+        name: product.name,
+        desc: product.desc,
+        price: product.price,
+        imageURL: product.imageURL);
+    _products.insert(0, newProduct);
     notifyListeners();
   }
 }

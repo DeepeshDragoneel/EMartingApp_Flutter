@@ -1,5 +1,7 @@
 import 'package:emarting/Providers/product.dart';
+import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key? key}) : super(key: key);
@@ -33,10 +35,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void _updateImagePreview() {
     if (!_imageUrlFocusNode.hasFocus) {
       if ((!_imageURLPreviewController.text.startsWith('http') &&
-              !_imageURLPreviewController.text.startsWith('https')) ||
-          (!_imageURLPreviewController.text.endsWith('png') &&
-              !_imageURLPreviewController.text.endsWith('.jpg') &&
-              !_imageURLPreviewController.text.endsWith('.jpeg'))) {
+                  !_imageURLPreviewController.text.startsWith('https')) ||
+              false
+          // (!_imageURLPreviewController.text.endsWith('png') &&
+          //     !_imageURLPreviewController.text.endsWith('.jpg') &&
+          //     !_imageURLPreviewController.text.endsWith('.jpeg'))
+          ) {
         return;
       }
       setState(() {});
@@ -48,7 +52,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!isValid) {
       return;
     }
+    final productProvider = Provider.of<Products>(context, listen: false);
     _form.currentState!.save();
+    productProvider.addProduct(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -120,7 +127,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     },
                     validator: (value) {
                       if (value!.length < 10) {
-                        return 'Description should be atleast 5 character\'s long!';
+                        return 'Description should be atleast 10 character\'s long!';
                       }
                       return null;
                     }),
@@ -157,21 +164,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               id: '',
                             );
                           },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please Enter a value';
-                            }
-                            if (!value.startsWith('http') &&
-                                !value.startsWith('https')) {
-                              return 'Please enter a valid URL';
-                            }
-                            if (!value.endsWith('png') &&
-                                !value.endsWith('.jpg') &&
-                                !value.endsWith('.jpeg')) {
-                              return 'Please enter an Image URL';
-                            }
-                            return null;
-                          },
+                          // validator: (value) {
+                          //   if (value!.isEmpty) {
+                          //     return 'Please Enter a value';
+                          //   }
+                          //   if (!value.startsWith('http') &&
+                          //       !value.startsWith('https')) {
+                          //     return 'Please enter a valid URL';
+                          //   }
+                          //   if (!value.endsWith('png') &&
+                          //       !value.endsWith('.jpg') &&
+                          //       !value.endsWith('.jpeg')) {
+                          //     return 'Please enter an Image URL';
+                          //   }
+                          //   return null;
+                          // },
                           onEditingComplete: () {
                             setState(() {});
                           },
