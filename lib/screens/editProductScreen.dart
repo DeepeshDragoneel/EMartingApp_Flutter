@@ -32,11 +32,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImagePreview() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if ((!_imageURLPreviewController.text.startsWith('http') &&
+              !_imageURLPreviewController.text.startsWith('https')) ||
+          (!_imageURLPreviewController.text.endsWith('png') &&
+              !_imageURLPreviewController.text.endsWith('.jpg') &&
+              !_imageURLPreviewController.text.endsWith('.jpeg'))) {
+        return;
+      }
       setState(() {});
     }
   }
 
   void _submitForm() {
+    final isValid = _form.currentState!.validate();
+    if (!isValid) {
+      return;
+    }
     _form.currentState!.save();
   }
 
@@ -52,52 +63,67 @@ class _EditProductScreenState extends State<EditProductScreen> {
             child: ListView(
               children: [
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Title'),
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) {
-                    _editedProduct = Product(
-                      name: value as String,
-                      desc: _editedProduct.desc,
-                      imageURL: _editedProduct.imageURL,
-                      price: _editedProduct.price,
-                      id: '',
-                    );
-                  },
-                  // validator: (value){
-                  //   if(value.lenght<5){
-                  //     return 'Title should be atleast 5 character\'s long!';
-                  //   }
-                  //   return null;
-                  // }
-                ),
+                    decoration: InputDecoration(labelText: 'Title'),
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: value as String,
+                        desc: _editedProduct.desc,
+                        imageURL: _editedProduct.imageURL,
+                        price: _editedProduct.price,
+                        id: '',
+                      );
+                    },
+                    validator: (value) {
+                      if (value!.length < 5) {
+                        return 'Title should be atleast 5 character\'s long!';
+                      }
+                      return null;
+                    }),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Price'),
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.next,
-                  onSaved: (value) {
-                    _editedProduct = Product(
-                      name: _editedProduct.name,
-                      desc: _editedProduct.desc,
-                      imageURL: _editedProduct.imageURL,
-                      price: double.parse(value as String),
-                      id: '',
-                    );
-                  },
-                ),
+                    decoration: InputDecoration(labelText: 'Price'),
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: _editedProduct.name,
+                        desc: _editedProduct.desc,
+                        imageURL: _editedProduct.imageURL,
+                        price: double.parse(value as String),
+                        id: '',
+                      );
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a value';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Enter a valid number';
+                      }
+                      if (double.parse(value) <= 0) {
+                        return 'Price should be greater than 0';
+                      }
+                      return null;
+                    }),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  maxLines: 3,
-                  keyboardType: TextInputType.multiline,
-                  onSaved: (value) {
-                    _editedProduct = Product(
-                      name: _editedProduct.name,
-                      desc: value as String,
-                      imageURL: _editedProduct.imageURL,
-                      price: _editedProduct.price,
-                      id: '',
-                    );
-                  },
-                ),
+                    decoration: InputDecoration(labelText: 'Description'),
+                    maxLines: 3,
+                    keyboardType: TextInputType.multiline,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: _editedProduct.name,
+                        desc: value as String,
+                        imageURL: _editedProduct.imageURL,
+                        price: _editedProduct.price,
+                        id: '',
+                      );
+                    },
+                    validator: (value) {
+                      if (value!.length < 10) {
+                        return 'Description should be atleast 5 character\'s long!';
+                      }
+                      return null;
+                    }),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -130,6 +156,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: _editedProduct.price,
                               id: '',
                             );
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter a value';
+                            }
+                            if (!value.startsWith('http') &&
+                                !value.startsWith('https')) {
+                              return 'Please enter a valid URL';
+                            }
+                            if (!value.endsWith('png') &&
+                                !value.endsWith('.jpg') &&
+                                !value.endsWith('.jpeg')) {
+                              return 'Please enter an Image URL';
+                            }
+                            return null;
                           },
                           onEditingComplete: () {
                             setState(() {});
