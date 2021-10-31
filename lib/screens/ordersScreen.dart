@@ -13,7 +13,15 @@ class OrderScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Orders')),
       body: (orderData.orders.length == 0
-          ? (Text('No orders'))
+          ? Center(
+              child: (Container(
+                margin: EdgeInsets.all(10),
+                child: Text(
+                  'No orders Yet!',
+                  style: Theme.of(context).textTheme.title,
+                ),
+              )),
+            )
           : (ListView.builder(
               itemBuilder: (context, index) {
                 return OrderItemTile(orderData.orders[index], index);
