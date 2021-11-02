@@ -1,5 +1,5 @@
 import 'package:emarting/Providers/products.dart';
-import 'package:emarting/screens/myProductTile.dart';
+import 'package:emarting/widgets/myProductTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

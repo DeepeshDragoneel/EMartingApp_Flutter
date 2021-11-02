@@ -15,6 +15,9 @@ class ShopMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
     final shopProducts = productData.products;
+
+    
+
     return Scaffold(
       appBar: AppBar(
         title: Text("EMarting"),

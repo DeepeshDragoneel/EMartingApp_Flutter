@@ -1,5 +1,5 @@
 import 'package:emarting/Providers/orders.dart';
-import 'package:emarting/screens/orderItemTile.dart';
+import 'package:emarting/widgets/orderItemTile.dart';
 import 'package:emarting/widgets/appDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

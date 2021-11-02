@@ -10,13 +10,16 @@ import 'package:emarting/screens/shopMainScreen.dart';
 import 'package:flutter/material.dart';
 import './Providers/products.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterConfig.loadEnvVariables();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  Map<int, Color> color = {
+  final Map<int, Color> color = {
     50: Color.fromRGBO(85, 246, 240, .1),
     100: Color.fromRGBO(85, 246, 240, .2),
     200: Color.fromRGBO(85, 246, 240, .3),
@@ -31,13 +34,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(FlutterConfig.get('REST_URL'));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => Products()),
-        ChangeNotifierProvider(
-          create: (context) => CartItems()),
-        ChangeNotifierProvider(
-          create: (context) => Orders()),
+        ChangeNotifierProvider(create: (context) => CartItems()),
+        ChangeNotifierProvider(create: (context) => Orders()),
       ],
       child: MaterialApp(
         title: 'EMarting',
