@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_config/flutter_config.dart';
+import 'dart:convert';
 
 class Products with ChangeNotifier {
   List<Product> _products = [
@@ -41,6 +43,21 @@ class Products with ChangeNotifier {
 
   List<Product> get products {
     return [..._products];
+  }
+
+  //get all products
+  Future<void> getAndSetProducts() async {
+    try {
+      print('asssssssssssss');
+      var url = FlutterConfig.get('REST_URL');
+      final params = {'pageNumber': 1, 'query': ""};
+      final queryURI = Uri.https(url, 'shop', params);
+      print(queryURI);
+      final result = await http.get(queryURI);
+      print(json.decode(result.body));
+    } catch (error) {
+      print(error);
+    }
   }
 
   Product findProductById(String id) {

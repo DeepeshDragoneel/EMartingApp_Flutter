@@ -8,16 +8,35 @@ import 'package:provider/provider.dart';
 import '../Providers/product.dart';
 import '../Providers/products.dart';
 
-class ShopMainScreen extends StatelessWidget {
+class ShopMainScreen extends StatefulWidget {
   // const ShopMainScreen({ Key? key }) : super(key: key);
+
+  @override
+  _ShopMainScreenState createState() => _ShopMainScreenState();
+}
+
+class _ShopMainScreenState extends State<ShopMainScreen> {
+  bool isInit = false;
+
+  @override
+  void initState() {
+    // Provider.of<Products>(context).getAndSetProducts();
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if (!isInit) {
+      Provider.of<Products>(context).getAndSetProducts();
+      isInit = true;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
     final productData = Provider.of<Products>(context);
     final shopProducts = productData.products;
-
-    
-
     return Scaffold(
       appBar: AppBar(
         title: Text("EMarting"),
