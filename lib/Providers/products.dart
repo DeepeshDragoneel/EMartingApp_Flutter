@@ -5,71 +5,85 @@ import 'package:flutter_config/flutter_config.dart';
 import 'dart:convert';
 
 class Products with ChangeNotifier {
+  int _remainingProducts = 1;
+  int pageNumber = 0;
+  bool _isLoading = false;
   List<Product> _products = [
-    Product(
-      id: 'p1',
-      name: 'Red Shirt',
-      desc: 'A red shirt - it is pretty red!',
-      price: 29.99,
-      imageURL:
-          'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    ),
-    Product(
-      id: 'p2',
-      name: 'Trousers',
-      desc:
-          'A nice pair of trousers. wear it to feel the fabric, we bet you wont regret!',
-      price: 59.99,
-      imageURL:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    ),
-    Product(
-      id: 'p3',
-      name: 'Yellow Scarf',
-      desc: 'Warm and cozy - exactly what you need for the winter.',
-      price: 19.99,
-      imageURL:
-          'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    ),
-    Product(
-      id: 'p4',
-      name: 'Pan',
-      desc: 'Prepare any meal you want.',
-      price: 49.99,
-      imageURL:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+    // Product(
+    //   id: 'p1',
+    //   name: 'Red Shirt',
+    //   desc: 'A red shirt - it is pretty red!',
+    //   price: 29.99,
+    //   imageURL:
+    //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
+    // ),
+    // Product(
+    //   id: 'p2',
+    //   name: 'Trousers',
+    //   desc:
+    //       'A nice pair of trousers. wear it to feel the fabric, we bet you wont regret!',
+    //   price: 59.99,
+    //   imageURL:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
+    // ),
+    // Product(
+    //   id: 'p3',
+    //   name: 'Yellow Scarf',
+    //   desc: 'Warm and cozy - exactly what you need for the winter.',
+    //   price: 19.99,
+    //   imageURL:
+    //       'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
+    // ),
+    // Product(
+    //   id: 'p4',
+    //   name: 'Pan',
+    //   desc: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageURL:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
   ];
 
   List<Product> get products {
     return [..._products];
   }
 
+  //get _isLoading
+  bool get isLoading {
+    return _isLoading;
+  }
+
+  //get _remainingProducts
+  int get remainingProducts {
+    return _remainingProducts;
+  }
+
+  void toogleLoading() {
+    _isLoading = !_isLoading;
+    if (_isLoading == true) {
+      notifyListeners();
+    }
+  }
+
   //get all products
   Future<void> getAndSetProducts() async {
     try {
-      final params = {'pageNumber': 1, 'query': ""};
-      // final queryURI = Uri.https(url, 'shop', params);
-      // final queryURI = '${FlutterConfig.get('REST_URL')}';
-      // var uri = Uri(
-      //   scheme: 'https',
-      //   host: 'emarting-backend-api.herokuapp.com',
-      //   path: '/shop',
-      //   queryParameters: {
-      //     'pageNumber': 1,
-      //     'query': ""
-      //   },
-      // );
+      // toogleLoading();
+      if (_remainingProducts <= 0) {
+        return;
+      }
+      pageNumber += 1;
       final queryParameters = {
-        'pageNumber': '1',
+        'pageNumber': pageNumber.toString(),
         'query': "",
       };
       final uri = Uri.https(
           'emarting-backend-api.herokuapp.com', '/shop', queryParameters);
-      print(uri);
+      // print(uri);
       final result = await http.get(uri);
+      _remainingProducts = json.decode(result.body)['count'];
       var shopProducts = json.decode(result.body)['products'];
-      print(shopProducts);
+      print(json.decode(result.body)['count']);
       //add every item of shopProducts to _products
       shopProducts.forEach((product) => _products.add(Product(
           id: product['_id'],
@@ -77,6 +91,7 @@ class Products with ChangeNotifier {
           desc: product['desc'],
           price: product['price'].toDouble(),
           imageURL: product['image'])));
+      // toogleLoading();
       notifyListeners();
     } catch (error) {
       print(error);
