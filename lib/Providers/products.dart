@@ -51,9 +51,25 @@ class Products with ChangeNotifier {
       print('asssssssssssss');
       var url = FlutterConfig.get('REST_URL');
       final params = {'pageNumber': 1, 'query': ""};
-      final queryURI = Uri.https(url, 'shop', params);
-      print(queryURI);
-      final result = await http.get(queryURI);
+      // final queryURI = Uri.https(url, 'shop', params);
+      // final queryURI = '${FlutterConfig.get('REST_URL')}';
+      // var uri = Uri(
+      //   scheme: 'https',
+      //   host: 'emarting-backend-api.herokuapp.com',
+      //   path: '/shop',
+      //   queryParameters: {
+      //     'pageNumber': 1,
+      //     'query': ""
+      //   },
+      // );
+      final queryParameters = {
+        'pageNumber': '1',
+        'query': "",
+      };
+      final uri = Uri.https(
+          'emarting-backend-api.herokuapp.com', '/shop', queryParameters);
+      print(uri);
+      final result = await http.get(uri);
       print(json.decode(result.body));
     } catch (error) {
       print(error);
