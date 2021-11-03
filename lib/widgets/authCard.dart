@@ -66,7 +66,8 @@ class _AuthCardState extends State<AuthCard> {
         child: Container(
           padding: EdgeInsets.all(10.0),
           child: Column(children: [
-            Text('SignUp', style: Theme.of(context).textTheme.title),
+            Text(_authMode == AuthMode.Signup ? 'Sign Up' : 'Log In',
+                style: Theme.of(context).textTheme.title),
             SizedBox(height: 20),
             Container(
                 padding: EdgeInsets.all(10),
@@ -76,20 +77,21 @@ class _AuthCardState extends State<AuthCard> {
                 child: Form(
                     child: SingleChildScrollView(
                   child: Column(children: [
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(labelText: 'User Name'),
-                      initialValue: _initValue['userName'],
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter a user name';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _initValue['userName'] = value as String;
-                      },
-                    ),
+                    if (_authMode == AuthMode.Signup)
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(labelText: 'User Name'),
+                        initialValue: _initValue['userName'],
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter a user name';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _initValue['userName'] = value as String;
+                        },
+                      ),
                     TextFormField(
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(labelText: 'E-Mail'),
