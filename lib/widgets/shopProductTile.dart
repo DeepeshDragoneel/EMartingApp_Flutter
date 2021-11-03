@@ -56,12 +56,14 @@ class ShopProductTile extends StatelessWidget {
               decoration: BoxDecoration(
                   // border: Border.all(color: Colors.black),
                   ),
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    productInfo.name,
+                    (productInfo.name.length > 15
+                        ? productInfo.name.substring(0, 15) + '...'
+                        : productInfo.name),
                     textAlign: TextAlign.left,
                     style: Theme.of(context).textTheme.body2,
                   ),
@@ -73,6 +75,8 @@ class ShopProductTile extends StatelessWidget {
                         //   shape: BoxShape.circle,
                         // ),
                         child: IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       onPressed: () {
                         productInfo.changeFav();
                       },

@@ -48,8 +48,6 @@ class Products with ChangeNotifier {
   //get all products
   Future<void> getAndSetProducts() async {
     try {
-      print('asssssssssssss');
-      var url = FlutterConfig.get('REST_URL');
       final params = {'pageNumber': 1, 'query': ""};
       // final queryURI = Uri.https(url, 'shop', params);
       // final queryURI = '${FlutterConfig.get('REST_URL')}';
@@ -70,7 +68,16 @@ class Products with ChangeNotifier {
           'emarting-backend-api.herokuapp.com', '/shop', queryParameters);
       print(uri);
       final result = await http.get(uri);
-      print(json.decode(result.body));
+      var shopProducts = json.decode(result.body)['products'];
+      print(shopProducts);
+      //add every item of shopProducts to _products
+      shopProducts.forEach((product) => _products.add(Product(
+          id: product['_id'],
+          name: product['title'],
+          desc: product['desc'],
+          price: product['price'].toDouble(),
+          imageURL: product['image'])));
+      notifyListeners();
     } catch (error) {
       print(error);
     }
