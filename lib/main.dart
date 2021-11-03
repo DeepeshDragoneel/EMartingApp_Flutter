@@ -1,5 +1,6 @@
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/orders.dart';
+import 'package:emarting/screens/authScreen.dart';
 import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/editProductScreen.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
@@ -59,8 +60,9 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               )),
         ),
-        home: ShopMainScreen(),
+        home: AuthScreen(),
         routes: {
+          '/auth': (context) => AuthScreen(),
           '/productDetails': (context) => ProductDetailesScreen(),
           '/favoriteProducts': (context) => FavoritesScreen(),
           '/cart': (context) => CartScreen(),
