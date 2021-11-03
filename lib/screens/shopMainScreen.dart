@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Providers/product.dart';
 import '../Providers/products.dart';
+import 'package:skeletons/skeletons.dart';
 
 class ShopMainScreen extends StatefulWidget {
   // const ShopMainScreen({ Key? key }) : super(key: key);
@@ -96,57 +97,119 @@ class _ShopMainScreenState extends State<ShopMainScreen> {
         ],
         // backgroundColor: Colors.white,
       ),
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Expanded(
-            child: Container(
-              // height: shopProducts.length > 100
-              //     ? MediaQuery.of(context).size.height
-              //     : 0,
-              decoration: BoxDecoration(
-                color: Colors.white,
-              ),
-              child: NotificationListener<ScrollNotification>(
-                // onNotification: _handleScrollNotification,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  controller: _controller,
-                  padding: const EdgeInsets.all(10),
-                  itemCount: shopProducts.length,
-                  itemBuilder: (context, index) {
-                    return ChangeNotifierProvider.value(
-                        // create: (context) => shopProducts[index],
-                        value: shopProducts[index],
-                        child: ShopProductTile(
-                          index,
-                          // shopProducts[index].id,
-                          // shopProducts[index].name,
-                          // shopProducts[index].desc,
-                          // shopProducts[index].imageURL),
-                        ));
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.75,
+      body: (isLoading && shopProducts.length == 0)
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Column(
+                  children: [
+                    CircularProgressIndicator(),
+                    Container(
+                        padding: EdgeInsets.all(10),
+                        child:
+                            Text('Loading...', style: TextStyle(fontSize: 20))),
+                  ],
+                )),
+              ],
+            )
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: Container(
+                    // height: shopProducts.length > 100
+                    //     ? MediaQuery.of(context).size.height
+                    //     : 0,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: NotificationListener<ScrollNotification>(
+                      // onNotification: _handleScrollNotification,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        controller: _controller,
+                        padding: const EdgeInsets.all(10),
+                        itemCount: pageLoading && shopProducts.length == 0
+                            ? 6
+                            : shopProducts.length,
+                        itemBuilder: (context, index) {
+                          if (pageLoading && shopProducts.length == 0) {
+                            return SkeletonItem(
+                                child: Column(children: [
+                              SkeletonAvatar(
+                                style: SkeletonAvatarStyle(
+                                  width: double.infinity,
+                                  minHeight:
+                                      MediaQuery.of(context).size.height / 8,
+                                  maxHeight:
+                                      MediaQuery.of(context).size.height / 7,
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SkeletonParagraph(
+                                      style: SkeletonParagraphStyle(
+                                          lines: 3,
+                                          spacing: 6,
+                                          lineStyle: SkeletonLineStyle(
+                                            randomLength: true,
+                                            height: 10,
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            minLength: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                6,
+                                            maxLength: MediaQuery.of(context)
+                                                    .size
+                                                    .width /
+                                                3,
+                                          )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: 12),
+                            ]));
+                          }
+                          return ChangeNotifierProvider.value(
+                              // create: (context) => shopProducts[index],
+                              value: shopProducts[index],
+                              child: ShopProductTile(
+                                index,
+                                // shopProducts[index].id,
+                                // shopProducts[index].name,
+                                // shopProducts[index].desc,
+                                // shopProducts[index].imageURL),
+                              ));
+                        },
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 0.75,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                pageLoading
+                    ? Container(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.white,
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            CircularProgressIndicator(),
+                          ],
+                        )),
+                      )
+                    : Container(),
+              ],
             ),
-          ),
-          pageLoading
-              ? Container(
-                  padding: EdgeInsets.all(10),
-                  color: Colors.white,
-                  child: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Container(),
-        ],
-      ),
       drawer: Theme(
         data: Theme.of(context).copyWith(
           canvasColor:
