@@ -78,7 +78,7 @@ class Products with ChangeNotifier {
         'query': "",
       };
       final uri = Uri.https(
-          'emarting-backend-api.herokuapp.com', '/shop', queryParameters);
+          FlutterConfig.get('REST_URL'), '/shop', queryParameters);
       // print(uri);
       final result = await http.get(uri);
       _remainingProducts = json.decode(result.body)['count'];

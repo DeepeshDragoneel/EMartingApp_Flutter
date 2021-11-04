@@ -1,4 +1,6 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 enum AuthMode {
   Signup,
@@ -18,13 +20,14 @@ class _AuthCardState extends State<AuthCard> {
     'email': '',
     'password': '',
   };
+  String _errorData = '';
   var _authMode = AuthMode.Signup;
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   bool _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -37,6 +40,20 @@ class _AuthCardState extends State<AuthCard> {
       // Log user in
     } else {
       // Sign user up
+      try {
+        final result = await Provider.of<Auth>(context, listen: false).signUp(
+            _initValue['email'] as String,
+            _initValue['userName'] as String,
+            _initValue['password'] as String);
+        setState(() {
+          _isLoading = false;
+        });
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+          _errorData = error.toString();
+        });
+      }
     }
     setState(() {
       _isLoading = false;
@@ -53,6 +70,12 @@ class _AuthCardState extends State<AuthCard> {
         _authMode = AuthMode.Login;
       });
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    _errorData = Provider.of<Auth>(context).errorData;
+    super.didChangeDependencies();
   }
 
   @override
@@ -75,106 +98,114 @@ class _AuthCardState extends State<AuthCard> {
                     minHeight: _authMode == AuthMode.Signup ? 320 : 260),
                 width: deviceSize.width * 0.75,
                 child: Form(
+                    key: _formKey,
                     child: SingleChildScrollView(
-                  child: Column(children: [
-                    if (_authMode == AuthMode.Signup)
-                      TextFormField(
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(labelText: 'User Name'),
-                        initialValue: _initValue['userName'],
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Please enter a user name';
-                          }
-                          return null;
-                        },
-                        onSaved: (value) {
-                          _initValue['userName'] = value as String;
-                        },
-                      ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(labelText: 'E-Mail'),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (value!.isEmpty || !value.contains('@')) {
-                          return 'Invalid email!';
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _initValue['email'] = value as String;
-                      },
-                    ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(labelText: 'Password'),
-                      obscureText: true,
-                      controller: _passwordController,
-                      validator: (value) {
-                        if (value!.isEmpty || value.length < 5) {
-                          return 'Password is too short!';
-                        }
-                      },
-                      onSaved: (value) {
-                        _initValue['password'] = value as String;
-                      },
-                    ),
-                    if (_authMode == AuthMode.Signup)
-                      TextFormField(
-                        enabled: _authMode == AuthMode.Signup,
-                        decoration:
-                            InputDecoration(labelText: 'Confirm Password'),
-                        obscureText: true,
-                        validator: _authMode == AuthMode.Signup
-                            ? (value) {
-                                if (value != _passwordController.text) {
-                                  return 'Passwords do not match!';
-                                }
+                      child: Column(children: [
+                        if (_authMode == AuthMode.Signup)
+                          TextFormField(
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(labelText: 'User Name'),
+                            initialValue: _initValue['userName'],
+                            validator: (value) {
+                              if (value!.length < 4) {
+                                return 'Username must be atleast 4 character\'s long!';
                               }
-                            : null,
-                      ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    if (_isLoading)
-                      CircularProgressIndicator()
-                    else
-                      ElevatedButton(
-                        child: Text(
-                            _authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                        onPressed: _submit,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                          padding: MaterialStateProperty.all(
-                              EdgeInsets.symmetric(
-                                  horizontal: 30.0, vertical: 8.0)),
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.yellow[700]),
-                        ),
-                      ),
-                    TextButton(
-                        child: Text(
-                            '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
-                        onPressed: _switchAuthMode,
-                        style: ButtonStyle(
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          )),
-                          padding: MaterialStateProperty.all(
-                            EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _initValue['userName'] = value as String;
+                            },
                           ),
-                          foregroundColor:
-                              MaterialStateProperty.all(Colors.yellow[900]),
-                        )),
-                  ]),
-                )))
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(labelText: 'E-Mail'),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value!.isEmpty || !value.contains('@')) {
+                              return 'Invalid email!';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _initValue['email'] = value as String;
+                          },
+                        ),
+                        TextFormField(
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(labelText: 'Password'),
+                          obscureText: true,
+                          controller: _passwordController,
+                          validator: (value) {
+                            if (value!.isEmpty || value.length < 4) {
+                              return 'Password must be atleast 4 character\'s long!';
+                            }
+                          },
+                          onSaved: (value) {
+                            _initValue['password'] = value as String;
+                          },
+                        ),
+                        if (_authMode == AuthMode.Signup)
+                          TextFormField(
+                            enabled: _authMode == AuthMode.Signup,
+                            decoration:
+                                InputDecoration(labelText: 'Confirm Password'),
+                            obscureText: true,
+                            validator: _authMode == AuthMode.Signup
+                                ? (value) {
+                                    if (value != _passwordController.text) {
+                                      return 'Passwords do not match!';
+                                    }
+                                  }
+                                : null,
+                          ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        if (_isLoading) CircularProgressIndicator()
+                        else if (_errorData != '')
+                          Text(
+                            _errorData,
+                            style: TextStyle(color: Colors.red),
+                          ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ElevatedButton(
+                          child: Text(_authMode == AuthMode.Login
+                              ? 'LOGIN'
+                              : 'SIGN UP'),
+                          onPressed: _submit,
+                          style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            )),
+                            padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 30.0, vertical: 8.0)),
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.yellow[700]),
+                          ),
+                        ),
+                        TextButton(
+                            child: Text(
+                                '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                            onPressed: _switchAuthMode,
+                            style: ButtonStyle(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              )),
+                              padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                    horizontal: 30.0, vertical: 4),
+                              ),
+                              foregroundColor:
+                                  MaterialStateProperty.all(Colors.yellow[900]),
+                            )),
+                      ]),
+                    )))
           ]),
         ));
   }

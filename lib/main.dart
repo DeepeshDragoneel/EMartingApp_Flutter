@@ -1,3 +1,4 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/screens/authScreen.dart';
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context)=>Auth()),
         ChangeNotifierProvider(create: (context) => Products()),
         ChangeNotifierProvider(create: (context) => CartItems()),
         ChangeNotifierProvider(create: (context) => Orders()),
@@ -62,6 +64,7 @@ class MyApp extends StatelessWidget {
         ),
         home: AuthScreen(),
         routes: {
+          '/shop': (context) => ShopMainScreen(),
           '/auth': (context) => AuthScreen(),
           '/productDetails': (context) => ProductDetailesScreen(),
           '/favoriteProducts': (context) => FavoritesScreen(),
