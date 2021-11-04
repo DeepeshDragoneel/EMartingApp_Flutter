@@ -5,6 +5,7 @@ import 'package:emarting/screens/authScreen.dart';
 import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/editProductScreen.dart';
 import 'package:emarting/screens/favoritesScreen.dart';
+import 'package:emarting/screens/homeControllerScreen.dart';
 import 'package:emarting/screens/myProductScreen.dart';
 import 'package:emarting/screens/ordersScreen.dart';
 import 'package:emarting/screens/productDetailsScreen.dart';
@@ -37,44 +38,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context)=>Auth()),
-        ChangeNotifierProvider(create: (context) => Products()),
-        ChangeNotifierProvider(create: (context) => CartItems()),
-        ChangeNotifierProvider(create: (context) => Orders()),
-      ],
-      child: MaterialApp(
-        title: 'EMarting',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: MaterialColor(0xFF2196F3, color),
-          accentColor: Color.fromRGBO(241, 227, 125, 1),
-          canvasColor: Color.fromRGBO(255, 254, 229, 1),
-          fontFamily: 'Ubuntu',
-          textTheme: ThemeData.light().textTheme.copyWith(
-              body1: TextStyle(color: Color.fromRGBO(20, 51, 51, 1)),
-              body2: TextStyle(
-                  color: Color.fromRGBO(20, 51, 51, 1),
-                  fontWeight: FontWeight.bold),
-              title: TextStyle(
-                fontSize: 24.5,
-                fontFamily: 'RobotoCondensed',
-                fontWeight: FontWeight.bold,
-              )),
-        ),
-        home: AuthScreen(),
-        routes: {
-          '/shop': (context) => ShopMainScreen(),
-          '/auth': (context) => AuthScreen(),
-          '/productDetails': (context) => ProductDetailesScreen(),
-          '/favoriteProducts': (context) => FavoritesScreen(),
-          '/cart': (context) => CartScreen(),
-          '/orders': (context) => OrderScreen(),
-          '/myProducts': (context) => MyProductScreen(),
-          '/editProduct': (context) => EditProductScreen(),
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider(create: (context) => Auth()),
+          ChangeNotifierProvider(create: (context) => Products()),
+          ChangeNotifierProvider(create: (context) => CartItems()),
+          ChangeNotifierProvider(create: (context) => Orders()),
+        ],
+        child: Consumer<Auth>(
+          builder: (context, authData, _) {
+            return MaterialApp(
+              title: 'EMarting',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                primarySwatch: MaterialColor(0xFF2196F3, color),
+                accentColor: Color.fromRGBO(241, 227, 125, 1),
+                canvasColor: Color.fromRGBO(255, 254, 229, 1),
+                fontFamily: 'Ubuntu',
+                textTheme: ThemeData.light().textTheme.copyWith(
+                    body1: TextStyle(color: Color.fromRGBO(20, 51, 51, 1)),
+                    body2: TextStyle(
+                        color: Color.fromRGBO(20, 51, 51, 1),
+                        fontWeight: FontWeight.bold),
+                    title: TextStyle(
+                      fontSize: 24.5,
+                      fontFamily: 'RobotoCondensed',
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              home: HomeControllerScreen(),
+              routes: {
+                '/shop': (context) => ShopMainScreen(),
+                '/auth': (context) => AuthScreen(),
+                '/productDetails': (context) => ProductDetailesScreen(),
+                '/favoriteProducts': (context) => FavoritesScreen(),
+                '/cart': (context) => CartScreen(),
+                '/orders': (context) => OrderScreen(),
+                '/myProducts': (context) => MyProductScreen(),
+                '/editProduct': (context) => EditProductScreen(),
+              },
+            );
+          },
+        ));
   }
 }
 

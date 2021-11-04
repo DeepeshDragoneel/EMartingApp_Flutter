@@ -2,16 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_config/flutter_config.dart';
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Auth with ChangeNotifier {
-  // String _token;
+  String _token = '';
   // DateTime _expiryDate;
-  // String _userId;
+  String _userName = '';
   String _errorData = '';
   String _verificationData = '';
 
   String get errorData => _errorData;
   String get verificationData => _verificationData;
+  String get token => _token;
+  String get userName => _userName;
+
+  Future<bool> get isAuthenticated async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return false;
+    }
+    final localUserData = json.decode(prefs.getString('userData') as String);
+
+    final body = {
+      'token': localUserData['token'],
+    };
+    print(body['token']);
+    final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
+    final result = await http.post(uri,
+        headers: {"Content-Type": "application/json"}, body: json.encode(body));
+    return result.body == 'ERROR' ? false : true;
+  }
 
   void changeErrorAndVerifyMsg() {
     _errorData = '';
@@ -37,15 +57,15 @@ class Auth with ChangeNotifier {
       print('printing result');
       print(result.body);
       if (result.body == "res Username is already taken") {
-        _errorData = ("Username Taken!");
-        _verificationData = ("");
+        _errorData = ('Username is Taken!');
+        _verificationData = ('');
       } else if (result.body == "res email is already taken") {
-        _errorData = ("Email Taken!");
+        _errorData = ('Email already Exists!');
         _verificationData = ("");
       } else {
-        _errorData = ("");
+        _errorData = ('');
         _verificationData =
-            ("Please Verify Your EMail using the invitation link sent to your mail!");
+            ('Please Verify Your EMail using the verification link sent to your mail!');
       }
       notifyListeners();
     } catch (error) {
@@ -70,9 +90,20 @@ class Auth with ChangeNotifier {
         print(json.decode(result.body)['code']);
         _errorData = 'INVALID CREDENTIALS!';
         notifyListeners();
+      } else if (json.decode(result.body)['code'] == 'SUCCESS') {
+        _token = (json.decode(result.body)['token']);
+        _userName = (json.decode(result.body)['username']);
+        _errorData = '';
+        final prefs = await SharedPreferences.getInstance();
+        final userData = json.encode({'token': _token, 'username': _userName});
+        prefs.setString('userData', userData);
+
+        notifyListeners();
       }
     } catch (error) {
       throw error;
     }
   }
+
+  Future<void> _authenticate() async {}
 }
