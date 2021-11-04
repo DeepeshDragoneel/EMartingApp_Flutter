@@ -21,6 +21,7 @@ class _AuthCardState extends State<AuthCard> {
     'password': '',
   };
   String _errorData = '';
+  String _verificationData = '';
   var _authMode = AuthMode.Signup;
   final GlobalKey<FormState> _formKey = GlobalKey();
 
@@ -38,10 +39,20 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       // Log user in
+      try {
+        await Provider.of<Auth>(context, listen: false).logIn(
+            _initValue['email'] as String, _initValue['password'] as String);
+      } catch (error) {
+        setState(() {
+          _isLoading = false;
+          _errorData = error.toString();
+          _verificationData = '';
+        });
+      }
     } else {
       // Sign user up
       try {
-        final result = await Provider.of<Auth>(context, listen: false).signUp(
+        await Provider.of<Auth>(context, listen: false).signUp(
             _initValue['email'] as String,
             _initValue['userName'] as String,
             _initValue['password'] as String);
@@ -52,6 +63,7 @@ class _AuthCardState extends State<AuthCard> {
         setState(() {
           _isLoading = false;
           _errorData = error.toString();
+          _verificationData = '';
         });
       }
     }
@@ -61,6 +73,7 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   void _switchAuthMode() {
+    Provider.of<Auth>(context, listen: false).changeErrorAndVerifyMsg();
     if (_authMode == AuthMode.Login) {
       setState(() {
         _authMode = AuthMode.Signup;
@@ -75,6 +88,7 @@ class _AuthCardState extends State<AuthCard> {
   @override
   void didChangeDependencies() {
     _errorData = Provider.of<Auth>(context).errorData;
+    _verificationData = Provider.of<Auth>(context).verificationData;
     super.didChangeDependencies();
   }
 
@@ -161,11 +175,17 @@ class _AuthCardState extends State<AuthCard> {
                         SizedBox(
                           height: 20,
                         ),
-                        if (_isLoading) CircularProgressIndicator()
+                        if (_isLoading)
+                          CircularProgressIndicator()
                         else if (_errorData != '')
                           Text(
                             _errorData,
                             style: TextStyle(color: Colors.red),
+                          ),
+                        if (_verificationData != '')
+                          Text(
+                            _verificationData,
+                            style: TextStyle(color: Colors.green),
                           ),
                         SizedBox(
                           height: 20,

@@ -13,6 +13,12 @@ class Auth with ChangeNotifier {
   String get errorData => _errorData;
   String get verificationData => _verificationData;
 
+  void changeErrorAndVerifyMsg() {
+    _errorData = '';
+    _verificationData = '';
+    notifyListeners();
+  }
+
   Future<void> signUp(String email, String username, String password) async {
     try {
       final body = {
@@ -42,6 +48,29 @@ class Auth with ChangeNotifier {
             ("Please Verify Your EMail using the invitation link sent to your mail!");
       }
       notifyListeners();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> logIn(String email, String pass) async {
+    try {
+      final body = {
+        'data': {
+          'email': email,
+          'pass': pass,
+        }
+      };
+      final uri =
+          Uri.https('emarting-backend-api.herokuapp.com', '/auth/login');
+      final result = await http.post(uri,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode(body));
+      if (json.decode(result.body)['code'] == 'ERROR') {
+        print(json.decode(result.body)['code']);
+        _errorData = 'INVALID CREDENTIALS!';
+        notifyListeners();
+      }
     } catch (error) {
       throw error;
     }
