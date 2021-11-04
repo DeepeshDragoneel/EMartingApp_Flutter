@@ -48,6 +48,18 @@ class _AppDrawerState extends State<AppDrawer> {
               Navigator.of(context).pushNamed('/myProducts');
             },
           ),
+          Divider(),
+          ListTile(
+            leading: Icon(
+              Icons.exit_to_app,
+              color: Colors.red,
+            ),
+            title: Text('LOG OUT', style: TextStyle(color: Colors.red)),
+            onTap: () async {
+              Navigator.of(context).pop();
+              await Provider.of<Auth>(context, listen: false).logout();
+            },
+          ),
         ],
       ),
     );

@@ -47,6 +47,7 @@ class _AuthCardState extends State<AuthCard> {
           _isLoading = false;
           _errorData = error.toString();
           _verificationData = '';
+          _authMode = _authMode;
         });
       }
     } else {
@@ -73,7 +74,7 @@ class _AuthCardState extends State<AuthCard> {
   }
 
   void _switchAuthMode() {
-    Provider.of<Auth>(context, listen: false).changeErrorAndVerifyMsg();
+    // Provider.of<Auth>(context, listen: false).changeErrorAndVerifyMsg();
     if (_authMode == AuthMode.Login) {
       setState(() {
         _authMode = AuthMode.Signup;

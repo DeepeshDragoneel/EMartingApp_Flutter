@@ -35,7 +35,10 @@ class _HomeControllerScreenState extends State<HomeControllerScreen> {
   @override
   Widget build(BuildContext context) {
     return loadingHomePage
-        ? CircularProgressIndicator()
+        ? Scaffold(
+            body: Center(
+                child: Container(
+                    height: 30, width: 30, child: CircularProgressIndicator())))
         : !isAuth
             ? AuthScreen()
             : ShopMainScreen();

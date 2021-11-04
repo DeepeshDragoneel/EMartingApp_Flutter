@@ -105,5 +105,11 @@ class Auth with ChangeNotifier {
     }
   }
 
-  Future<void> _authenticate() async {}
+  Future<void> logout() async {
+    _token = '';
+    _userName = '';
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('userData');
+    notifyListeners();
+  }
 }
