@@ -77,8 +77,8 @@ class Products with ChangeNotifier {
         'pageNumber': pageNumber.toString(),
         'query': "",
       };
-      final uri = Uri.https(
-          FlutterConfig.get('REST_URL'), '/shop', queryParameters);
+      final uri =
+          Uri.https(FlutterConfig.get('REST_URL'), '/shop', queryParameters);
       // print(uri);
       final result = await http.get(uri);
       _remainingProducts = json.decode(result.body)['count'];
@@ -90,7 +90,9 @@ class Products with ChangeNotifier {
           name: product['title'],
           desc: product['desc'],
           price: product['price'].toDouble(),
-          imageURL: product['image'])));
+          imageURL: product['image'],
+          rating: product['rating'].toDouble(),
+          author: product['author'])));
       // toogleLoading();
       notifyListeners();
     } catch (error) {

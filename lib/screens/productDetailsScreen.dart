@@ -42,13 +42,11 @@ class ProductDetailesScreen extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             ),
             Container(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                width: double.infinity,
-                child: Text(
-                  productDetails.desc,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w700, color: Colors.black54),
-                )),
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              width: double.infinity,
+              child: Text('By ${productDetails.author}',
+                  style: TextStyle(fontSize: 14, color: Colors.grey)),
+            ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               width: double.infinity,
@@ -57,7 +55,45 @@ class ProductDetailesScreen extends StatelessWidget {
                       fontFamily: 'Ubuntu',
                       fontWeight: FontWeight.bold,
                       fontSize: 20)),
-            )
+            ),
+            Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                width: double.infinity,
+                child: Text(
+                  productDetails.desc,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w700, color: Colors.black54),
+                )),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Divider(
+                  color: Colors.grey,
+                ),
+              ],
+            ),
+            Container(
+                child: Column(children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                width: double.infinity,
+                child: Text(
+                  'Rating & Reviews',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+              Row(children: [
+                Expanded(
+                    child: Text(
+                      '${productDetails.rating}',
+                      style:
+                          TextStyle(fontSize: 50, fontWeight: FontWeight.w100),
+                    ),
+                    flex: 4),
+                Expanded(child: Text('Yppppppppppppppp'), flex: 6),
+              ])
+            ])),
           ]),
         );
       }),
