@@ -3,22 +3,45 @@ import 'package:emarting/widgets/footerProductDetails.dart';
 import 'package:emarting/widgets/ratingPercentageBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:http/http.dart' as http;
 
-class ProductDetailesScreen extends StatelessWidget {
+class ProductDetailesScreen extends StatefulWidget {
   // const ProductDetailesScreen({ Key? key }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final productDetailsArgs =
-        ModalRoute.of(context)!.settings.arguments as String;
+  _ProductDetailesScreenState createState() => _ProductDetailesScreenState();
+}
 
+class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
+  var ratingPerStar;
+  bool isInit = false;
+  bool ratingLoaded = false;
+  var productDetailsArgs = '';
+  @override
+  void didChangeDependencies() {
+    if (!isInit) {
+      productDetailsArgs = ModalRoute.of(context)!.settings.arguments as String;
+      Provider.of<Products>(context, listen: false)
+          .getRatingPerStar(productDetailsArgs)
+          .then((value) {
+        setState(() {
+          ratingPerStar = value;
+          ratingLoaded = true;
+        });
+      });
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final productDetails = Provider.of<Products>(context, listen: false)
         .findProductById(productDetailsArgs);
     final productData = Provider.of<Products>(context);
     final shopProducts = productData.products;
     final productIdx = Provider.of<Products>(context, listen: false)
         .findProductIdx(productDetailsArgs);
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(title: Text(productDetails.name)),
@@ -107,12 +130,12 @@ class ProductDetailesScreen extends StatelessWidget {
                           ],
                         ),
                         flex: 4),
-                        Container(
-                          height: 100,
-                          child: VerticalDivider(
-                            color: Colors.grey,
-                          ),
-                        ),
+                    Container(
+                      height: 100,
+                      child: VerticalDivider(
+                        color: Colors.grey,
+                      ),
+                    ),
                     Flexible(
                         fit: FlexFit.tight,
                         child: Column(
@@ -121,35 +144,36 @@ class ProductDetailesScreen extends StatelessWidget {
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: 50, starNumber: '5')),
+                                    percentage: !ratingLoaded ? 0 : ratingPerStar['five'],
+                                    starNumber: '5')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: 15, starNumber: '4')),
+                                    percentage: !ratingLoaded ? 0 : ratingPerStar['four'], starNumber: '4')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: 5, starNumber: '3')),
+                                    percentage: !ratingLoaded ? 0 : ratingPerStar['three'], starNumber: '3')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: 10, starNumber: '2')),
+                                    percentage: !ratingLoaded ? 0 : ratingPerStar['two'], starNumber: '2')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: 20, starNumber: '1')),
+                                    percentage: !ratingLoaded ? 0 : ratingPerStar['one'], starNumber: '1')),
                             SizedBox(
                               height: 3,
                             ),

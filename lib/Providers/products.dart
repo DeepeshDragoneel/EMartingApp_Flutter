@@ -100,6 +100,23 @@ class Products with ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>> getRatingPerStar(String id) async {
+    try {
+      print('Geting rating for id: ${id}');
+      final queryParameters = {'query': id};
+      final uri =
+          Uri.https(FlutterConfig.get('REST_URL'), '/getRatingPerStar/${id}');
+      print(uri);
+      final result = await http.get(uri);
+      final ratingPerStar = json.decode(result.body);
+      print(ratingPerStar);
+      return ratingPerStar;
+    } catch (error) {
+      print(error);
+      throw (error);
+    }
+  }
+
   Product findProductById(String id) {
     return _products.firstWhere((product) => product.id == id);
   }
