@@ -1,5 +1,6 @@
 import 'package:emarting/Providers/products.dart';
 import 'package:emarting/widgets/footerProductDetails.dart';
+import 'package:emarting/widgets/ratingPercentageBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -73,27 +74,90 @@ class ProductDetailesScreen extends StatelessWidget {
               ],
             ),
             Container(
-                child: Column(children: [
-              Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                width: double.infinity,
-                child: Text(
-                  'Rating & Reviews',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-              ),
-              Row(children: [
-                Expanded(
+                child: Column(children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    width: double.infinity,
                     child: Text(
-                      '${productDetails.rating}',
-                      style:
-                          TextStyle(fontSize: 50, fontWeight: FontWeight.w100),
+                      'Rating & Reviews',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
                     ),
-                    flex: 4),
-                Expanded(child: Text('Yppppppppppppppp'), flex: 6),
-              ])
-            ])),
+                  ),
+                  Row(children: [
+                    Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '${productDetails.rating}',
+                              style: TextStyle(
+                                  fontSize: 45, fontWeight: FontWeight.w100),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 6),
+                              child: Icon(
+                                Icons.star,
+                                size: 25,
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                          ],
+                        ),
+                        flex: 4),
+                        Container(
+                          height: 100,
+                          child: VerticalDivider(
+                            color: Colors.grey,
+                          ),
+                        ),
+                    Flexible(
+                        fit: FlexFit.tight,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: RatingPercentageBar(
+                                    percentage: 50, starNumber: '5')),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: RatingPercentageBar(
+                                    percentage: 15, starNumber: '4')),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: RatingPercentageBar(
+                                    percentage: 5, starNumber: '3')),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: RatingPercentageBar(
+                                    percentage: 10, starNumber: '2')),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: RatingPercentageBar(
+                                    percentage: 20, starNumber: '1')),
+                            SizedBox(
+                              height: 3,
+                            ),
+                          ],
+                        ),
+                        flex: 6),
+                  ])
+                ])),
           ]),
         );
       }),
