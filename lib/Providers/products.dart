@@ -83,16 +83,20 @@ class Products with ChangeNotifier {
       final result = await http.get(uri);
       _remainingProducts = json.decode(result.body)['count'];
       var shopProducts = json.decode(result.body)['products'];
-      print(json.decode(result.body)['count']);
+      print(json.decode(result.body)['products'][0]);
       //add every item of shopProducts to _products
       shopProducts.forEach((product) => _products.add(Product(
-          id: product['_id'],
-          name: product['title'],
-          desc: product['desc'],
-          price: product['price'].toDouble(),
-          imageURL: product['image'],
-          rating: product['rating'].toDouble(),
-          author: product['author'])));
+            id: product['_id'],
+            name: product['title'],
+            desc: product['desc'],
+            price: product['price'].toDouble(),
+            imageURL: product['image'],
+            rating: product['rating'].toDouble(),
+            author: product['author'],
+            quantity: product['quantity'].toInt(),
+            genre: product['genre'],
+            pages: product['pages'].toInt(),
+          )));
       // toogleLoading();
       notifyListeners();
     } catch (error) {
@@ -162,7 +166,13 @@ class Products with ChangeNotifier {
         name: product.name,
         desc: product.desc,
         price: product.price,
-        imageURL: product.imageURL);
+        imageURL: product.imageURL,
+        rating: product.rating,
+        pages: product.pages,
+        quantity: product.quantity,
+        author: product.author,
+        isFav: product.isFav,
+        genre: product.genre);
     _products.insert(0, newProduct);
     notifyListeners();
   }

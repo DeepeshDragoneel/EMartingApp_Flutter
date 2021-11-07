@@ -2,6 +2,8 @@ import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:convert';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key? key}) : super(key: key);
@@ -14,16 +16,55 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageURLPreviewController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
+  bool addProduct = false;
 
-  var _editedProduct =
-      Product(id: '', name: '', price: 0, desc: '', imageURL: '', isFav: false);
+  var _editedProduct = Product(
+    id: '',
+    name: '',
+    price: 0,
+    desc: '',
+    imageURL: '',
+    isFav: false,
+    rating: 5.0,
+    author: 'Anonymous',
+    genre: 'Unknown',
+    quantity: 0,
+    pages: 0,
+  );
 
   var _initValue = {
     'name': '',
     'desc': '',
     'imageURL': '',
     'price': '',
+    'pages': '',
+    'quantity': '',
+    'author': '',
+    'genre': 'Action and Adventure',
   };
+  final genredata = [
+    {"name": "Action and Adventure"},
+    {"name": "Classics"},
+    {"name": "Comic Book or Graphic Novel"},
+    {"name": "Detective and Mystery"},
+    {"name": "Fantasy"},
+    {"name": "Historical Fiction"},
+    {"name": "Horror"},
+    {"name": "Literary Fiction"},
+    {"name": "Romance"},
+    {"name": "Science Fiction"},
+    {"name": "Short Stories"},
+    {"name": "Suspense and Thrillers"},
+    {"name": "Women's Fiction"},
+    {"name": "Biographies and Autobiographies"},
+    {"name": "Cookbooks"},
+    {"name": "Essays"},
+    {"name": "History"},
+    {"name": "Memoir"},
+    {"name": "Poetry"},
+    {"name": "Self-Help"},
+    {"name": "True Crime"}
+  ];
 
   @override
   void initState() {
@@ -33,8 +74,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   bool firstTime = true;
 
+  Future<String> getJson() {
+    return rootBundle.loadString('json_data.json');
+  }
+
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     if (firstTime) {
       final editingProductId = ModalRoute.of(context)!.settings.arguments;
       if (editingProductId != null) {
@@ -46,9 +91,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'desc': _editedProduct.desc,
           'imageURL': _editedProduct.imageURL,
           'price': _editedProduct.price.toString(),
+          'pages': '',
+          'quantity': '',
+          'author': '',
+          'genre': 'Action and '
         };
         _imageURLPreviewController.text = _editedProduct.imageURL;
+      } else {
+        setState(() {
+          addProduct = true;
+        });
       }
+      // genreData = json.decode(await getJson());
     }
     super.didChangeDependencies();
   }
@@ -81,6 +135,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (!isValid) {
       return;
     }
+    print('Submitted');
     final productProvider = Provider.of<Products>(context, listen: false);
     _form.currentState!.save();
     if (_editedProduct.id != '') {
@@ -93,9 +148,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    // if (arguments != null) {
+    //   print(arguments);
+    // }
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: Text('Edit Product')),
+      appBar: AppBar(title: Text(addProduct ? 'Add Product' : 'Edit Product')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -114,6 +173,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         price: _editedProduct.price,
                         id: _editedProduct.id,
                         isFav: _editedProduct.isFav,
+                        author: _editedProduct.author,
+                        pages: _editedProduct.pages,
+                        quantity: _editedProduct.quantity,
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
                       );
                     },
                     validator: (value) {
@@ -135,6 +199,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         price: double.parse(value as String),
                         id: _editedProduct.id,
                         isFav: _editedProduct.isFav,
+                        author: _editedProduct.author,
+                        pages: _editedProduct.pages,
+                        quantity: _editedProduct.quantity,
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
                       );
                     },
                     validator: (value) {
@@ -150,6 +219,120 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       return null;
                     }),
                 TextFormField(
+                    initialValue: _initValue['pages'],
+                    decoration: InputDecoration(labelText: 'Pages'),
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: _editedProduct.name,
+                        desc: _editedProduct.desc,
+                        imageURL: _editedProduct.imageURL,
+                        price: _editedProduct.price,
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
+                        author: _editedProduct.author,
+                        pages: double.parse(value as String),
+                        quantity: _editedProduct.quantity,
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
+                      );
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a value';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Enter a valid number';
+                      }
+                      if (double.parse(value) <= 0) {
+                        return 'Pages should be greater than 0';
+                      }
+                      return null;
+                    }),
+                TextFormField(
+                    initialValue: _initValue['quantity'],
+                    decoration: InputDecoration(labelText: 'Quatity'),
+                    keyboardType: TextInputType.number,
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: _editedProduct.name,
+                        desc: _editedProduct.desc,
+                        imageURL: _editedProduct.imageURL,
+                        price: _editedProduct.price,
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
+                        author: _editedProduct.author,
+                        pages: _editedProduct.pages,
+                        quantity: double.parse(value as String),
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
+                      );
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter a value';
+                      }
+                      if (double.tryParse(value) == null) {
+                        return 'Enter a valid number';
+                      }
+                      if (double.parse(value) <= 0) {
+                        return 'Quantity should be greater than 0';
+                      }
+                      return null;
+                    }),
+                DropdownButtonFormField(
+                  decoration: InputDecoration(labelText: 'Category'),
+                  value: _initValue['genre'],
+                  items: genredata.map((genre) {
+                    return DropdownMenuItem(
+                      value: genre['name'],
+                      child: Text(genre['name'] as String),
+                    );
+                  }).toList(),
+                  onSaved: (value) {
+                    _editedProduct = Product(
+                      name: _editedProduct.name,
+                      desc: _editedProduct.desc,
+                      imageURL: _editedProduct.imageURL,
+                      price: _editedProduct.price,
+                      id: _editedProduct.id,
+                      isFav: _editedProduct.isFav,
+                      author: _editedProduct.author,
+                      pages: _editedProduct.pages,
+                      quantity: _editedProduct.quantity,
+                      rating: _editedProduct.rating,
+                      genre: value as String,
+                    );
+                  },
+                  onChanged: (value) {
+                    setState(() {});
+                  },
+                ),
+                TextFormField(
+                    initialValue: _initValue['author'],
+                    decoration: InputDecoration(labelText: 'Author'),
+                    textInputAction: TextInputAction.next,
+                    onSaved: (value) {
+                      _editedProduct = Product(
+                        name: _editedProduct.name,
+                        desc: _editedProduct.desc,
+                        imageURL: _editedProduct.imageURL,
+                        price: _editedProduct.price,
+                        id: _editedProduct.id,
+                        isFav: _editedProduct.isFav,
+                        author: value as String,
+                        pages: _editedProduct.pages,
+                        quantity: _editedProduct.quantity,
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
+                      );
+                    },
+                    validator: (value) {
+                      return null;
+                    }),
+                TextFormField(
                     initialValue: _initValue['desc'],
                     decoration: InputDecoration(labelText: 'Description'),
                     maxLines: 3,
@@ -162,6 +345,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         price: _editedProduct.price,
                         id: _editedProduct.id,
                         isFav: _editedProduct.isFav,
+                        author: _editedProduct.author,
+                        pages: _editedProduct.pages,
+                        quantity: _editedProduct.quantity,
+                        rating: _editedProduct.rating,
+                        genre: _editedProduct.genre,
                       );
                     },
                     validator: (value) {
@@ -202,23 +390,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               price: _editedProduct.price,
                               id: _editedProduct.id,
                               isFav: _editedProduct.isFav,
+                              author: _editedProduct.author,
+                              pages: _editedProduct.pages,
+                              quantity: _editedProduct.quantity,
+                              rating: _editedProduct.rating,
+                              genre: _editedProduct.genre,
                             );
                           },
-                          // validator: (value) {
-                          //   if (value!.isEmpty) {
-                          //     return 'Please Enter a value';
-                          //   }
-                          //   if (!value.startsWith('http') &&
-                          //       !value.startsWith('https')) {
-                          //     return 'Please enter a valid URL';
-                          //   }
-                          //   if (!value.endsWith('png') &&
-                          //       !value.endsWith('.jpg') &&
-                          //       !value.endsWith('.jpeg')) {
-                          //     return 'Please enter an Image URL';
-                          //   }
-                          //   return null;
-                          // },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter a value';
+                            }
+                            // if (!value.startsWith('http') &&
+                            //     !value.startsWith('https')) {
+                            //   return 'Please enter a valid URL';
+                            // }
+                            // if (!value.endsWith('png') &&
+                            //     !value.endsWith('.jpg') &&
+                            //     !value.endsWith('.jpeg')) {
+                            //   return 'Please enter an Image URL';
+                            // }
+                            return null;
+                          },
                           onEditingComplete: () {
                             setState(() {});
                           },
@@ -228,6 +421,43 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 10),
+                Center(
+                  child: Stack(children: [
+                    Container(
+                      height: MediaQuery.of(context).size.width * 0.4 + 70,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      padding: const EdgeInsets.all(10),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.grey),
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(
+                                  'assets/images/bookPlaceholder.png'))),
+                    ),
+                    Positioned(
+                      child: Container(
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(width: 1, color: Colors.grey),
+                            borderRadius: BorderRadius.circular(15)),
+                        child: InkWell(
+                          onTap: () {},
+                          child: Icon(
+                            Icons.camera_alt_outlined,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      bottom: 10,
+                      right: 10,
+                    ),
+                  ]),
+                ),
+                SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
                       _submitForm();
@@ -239,3 +469,5 @@ class _EditProductScreenState extends State<EditProductScreen> {
     );
   }
 }
+
+

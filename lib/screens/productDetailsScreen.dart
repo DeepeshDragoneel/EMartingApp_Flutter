@@ -82,6 +82,12 @@ class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
                       fontSize: 20)),
             ),
             Container(
+              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              width: double.infinity,
+              child: Text('Only ${productDetails.quantity} left',
+                  style: TextStyle(fontSize: 12, color: Colors.grey)),
+            ),
+            Container(
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 width: double.infinity,
                 child: Text(
