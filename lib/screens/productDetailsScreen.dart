@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/products.dart';
+import 'package:emarting/widgets/ProductReviews.dart';
 import 'package:emarting/widgets/footerProductDetails.dart';
 import 'package:emarting/widgets/ratingPercentageBar.dart';
 import 'package:flutter/material.dart';
@@ -144,7 +145,9 @@ class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: !ratingLoaded ? 0 : ratingPerStar['five'],
+                                    percentage: !ratingLoaded
+                                        ? 0
+                                        : ratingPerStar['five'],
                                     starNumber: '5')),
                             SizedBox(
                               height: 3,
@@ -152,35 +155,48 @@ class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: !ratingLoaded ? 0 : ratingPerStar['four'], starNumber: '4')),
+                                    percentage: !ratingLoaded
+                                        ? 0
+                                        : ratingPerStar['four'],
+                                    starNumber: '4')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: !ratingLoaded ? 0 : ratingPerStar['three'], starNumber: '3')),
+                                    percentage: !ratingLoaded
+                                        ? 0
+                                        : ratingPerStar['three'],
+                                    starNumber: '3')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: !ratingLoaded ? 0 : ratingPerStar['two'], starNumber: '2')),
+                                    percentage: !ratingLoaded
+                                        ? 0
+                                        : ratingPerStar['two'],
+                                    starNumber: '2')),
                             SizedBox(
                               height: 3,
                             ),
                             Container(
                                 width: MediaQuery.of(context).size.width * 0.6,
                                 child: RatingPercentageBar(
-                                    percentage: !ratingLoaded ? 0 : ratingPerStar['one'], starNumber: '1')),
+                                    percentage: !ratingLoaded
+                                        ? 0
+                                        : ratingPerStar['one'],
+                                    starNumber: '1')),
                             SizedBox(
                               height: 3,
                             ),
                           ],
                         ),
                         flex: 6),
-                  ])
+                  ]),
+                  ProductReviews(),
                 ])),
           ]),
         );
