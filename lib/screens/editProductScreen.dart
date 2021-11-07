@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key? key}) : super(key: key);
@@ -13,6 +16,8 @@ class EditProductScreen extends StatefulWidget {
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
+  PickedFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
   final _imageURLPreviewController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
   final _form = GlobalKey<FormState>();
@@ -330,6 +335,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       );
                     },
                     validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Please enter Author\'s name';
+                      }
                       return null;
                     }),
                 TextFormField(
@@ -425,17 +433,19 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 Center(
                   child: Stack(children: [
                     Container(
-                      height: MediaQuery.of(context).size.width * 0.4 + 70,
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      padding: const EdgeInsets.all(10),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey),
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                  'assets/images/bookPlaceholder.png'))),
-                    ),
+                        height: MediaQuery.of(context).size.width * 0.4 + 70,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        padding: const EdgeInsets.all(10),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.grey),
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: _imageFile == null
+                                    ? AssetImage(
+                                            'assets/images/bookPlaceholder.png')
+                                        as ImageProvider
+                                    : FileImage(File(_imageFile!.path))))),
                     Positioned(
                       child: Container(
                         padding: const EdgeInsets.all(5),
@@ -444,7 +454,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             border: Border.all(width: 1, color: Colors.grey),
                             borderRadius: BorderRadius.circular(15)),
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (builder) => imageSelectBottom());
+                          },
                           child: Icon(
                             Icons.camera_alt_outlined,
                             color: Colors.black,
@@ -468,6 +482,65 @@ class _EditProductScreenState extends State<EditProductScreen> {
       ),
     );
   }
+
+  void takePhoto(ImageSource source) async {
+    try {
+      final pikedFile = await _picker.getImage(
+          source: source,
+          maxWidth: 480,
+          maxHeight: 600,
+          preferredCameraDevice: CameraDevice.front);
+      if (pikedFile != null) {
+        setState(() {
+          _imageFile = pikedFile as PickedFile;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Widget imageSelectBottom() {
+    return Container(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(top: 8, right: 10, left: 10, bottom: 10),
+      padding: const EdgeInsets.all(10),
+      child: Column(children: [
+        Text('Select Image: '),
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                takePhoto(ImageSource.camera);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.camera_alt_outlined),
+                  SizedBox(width: 10),
+                  Text('Camera')
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                takePhoto(ImageSource.gallery);
+              },
+              child: Row(
+                children: [
+                  Icon(Icons.image_outlined),
+                  SizedBox(width: 10),
+                  Text('Gallery')
+                ],
+              ),
+            ),
+          ],
+        ),
+      ]),
+    );
+  }
 }
-
-
