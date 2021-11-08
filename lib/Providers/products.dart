@@ -149,14 +149,68 @@ class Products with ChangeNotifier {
     // return [..._products.where((product) => product.isFav)];
   }
 
-  void updateProducts(String id, Product product) {
-    final updateindProductIdx =
-        _products.indexWhere((product) => product.id == id);
-    if (updateindProductIdx >= 0) {
-      print('Updating products! ${updateindProductIdx}');
-      _products[updateindProductIdx] = product;
+  void updateProducts(
+      String id, Product product, var imageFile, String token) async {
+    try {
+      print(imageFile);
+      if (imageFile == null) {
+        final details = {
+          'id': product.id,
+          'title': product.name,
+          'price': product.price,
+          'desc': product.desc,
+          'genre': product.genre,
+          'pages': product.pages,
+          'quantity': product.quantity,
+          'author': product.author,
+          'image': product.imageURL,
+        };
+        final uri = Uri.http(
+            FlutterConfig.get('REST_URL'), '/admin/editProductWithOutImg');
+        final result = await http.post(uri,
+            headers: {
+              "content-type": "application/json",
+              "accept": "application/json",
+            },
+            body: json.encode(details));
+      } else {
+        final details = {
+          'id': product.id,
+          'title': product.name,
+          'price': product.price,
+          'desc': product.desc,
+          'genre': product.genre,
+          'pages': product.pages,
+          'quantity': product.quantity,
+          'author': product.author,
+          'image': product.imageURL,
+        };
+        final uri = (Uri.https(
+            FlutterConfig.get('REST_URL'), 'admin/editProduct'));
+        print(uri);
+        var request = http.MultipartRequest('POST', uri);
+        request.headers.addAll({
+          "content-type": "multipart/form-data",
+        });
+        request.fields['data'] = json.encode(details);
+        request.files
+            .add(await http.MultipartFile.fromPath('file', imageFile.path));
+        // request.files.add(
+        //     await http.MultipartFile.fromPath('data', json.encode(detailes)));
+        print(request.files);
+        var response = await request.send();
+        print(response);
+      }
+      final updateindProductIdx =
+          _products.indexWhere((product) => product.id == id);
+      if (updateindProductIdx >= 0) {
+        print('Updating products! ${updateindProductIdx}');
+        _products[updateindProductIdx] = product;
+      }
+      notifyListeners();
+    } catch (error) {
+      print(error);
     }
-    notifyListeners();
   }
 
   void deleteProductById(String id) {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -41,8 +42,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _initValue = {
     'name': '',
     'desc': '',
-    'imageURL': '',
+    'imageURL':
+        'https://d827xgdhgqbnd.cloudfront.net/wp-content/uploads/2016/04/09121712/book-cover-placeholder.png',
     'price': '',
+    'defaultImage': 'assets/images/bookPlaceholder.png',
     'pages': '',
     'quantity': '',
     'author': '',
@@ -97,10 +100,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'desc': _editedProduct.desc,
           'imageURL': _editedProduct.imageURL,
           'price': _editedProduct.price.toString(),
-          'pages': '',
-          'quantity': '',
-          'author': '',
-          'genre': 'Action and Adventure'
+          'pages': _editedProduct.pages.toString(),
+          'quantity': _editedProduct.quantity.toString(),
+          'author': _editedProduct.author,
+          'genre': _editedProduct.genre,
+          'defaultImage': _editedProduct.imageURL,
         };
         _imageURLPreviewController.text = _editedProduct.imageURL;
       } else {
@@ -146,9 +150,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     final productProvider = Provider.of<Products>(context, listen: false);
     _form.currentState!.save();
     if (_editedProduct.id != '') {
-      productProvider.updateProducts(_editedProduct.id, _editedProduct);
+      productProvider.updateProducts(
+          _editedProduct.id, _editedProduct, _imageFile, userToken);
     } else {
-      productProvider.addProduct(_editedProduct, _imageFile as PickedFile, userToken);
+      productProvider.addProduct(
+          _editedProduct, _imageFile as PickedFile, userToken);
     }
     // Navigator.of(context).pop();
   }
@@ -449,8 +455,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             image: DecorationImage(
                                 fit: BoxFit.cover,
                                 image: _imageFile == null
-                                    ? AssetImage(
-                                            'assets/images/bookPlaceholder.png')
+                                    ? NetworkImage(
+                                            _initValue['imageURL'] as String)
                                         as ImageProvider
                                     : FileImage(File(_imageFile!.path))))),
                     Positioned(
@@ -481,7 +487,28 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 SizedBox(height: 10),
                 ElevatedButton(
                     onPressed: () {
-                      _submitForm();
+                      if (_imageFile == null && _editedProduct.id == null) {
+                        showCupertinoModalPopup(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                                  title: Text('Book Cover Picture!'),
+                                  content: Text(
+                                      'Please upload a Cover picture of your book'),
+                                  actions: [
+                                    ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop(true);
+                                        },
+                                        child: Text('Ok')),
+                                  ],
+                                ));
+                      }
+                      // else if (_imageFile == null && _editedProduct.id != null) {
+
+                      // }
+                      else {
+                        _submitForm();
+                      }
                     },
                     child: Text('Submit')),
               ],
