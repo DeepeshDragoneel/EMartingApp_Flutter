@@ -26,7 +26,7 @@ class Auth with ChangeNotifier {
     final body = {
       'token': localUserData['token'],
     };
-    print(body['token']);
+    // print(body['token']);
     final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
     final result = await http.post(uri,
         headers: {"Content-Type": "application/json"}, body: json.encode(body));
@@ -97,7 +97,7 @@ class Auth with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         final userData = json.encode({'token': _token, 'username': _userName});
         prefs.setString('userData', userData);
-
+        // print(_token);
         notifyListeners();
       }
     } catch (error) {

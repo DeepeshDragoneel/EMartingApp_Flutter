@@ -1,8 +1,12 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_config/flutter_config.dart';
 import 'dart:convert';
+import 'package:image_picker/image_picker.dart';
 
 class Products with ChangeNotifier {
   int _remainingProducts = 1;
@@ -78,7 +82,7 @@ class Products with ChangeNotifier {
         'query': "",
       };
       final uri =
-          Uri.https(FlutterConfig.get('REST_URL'), '/shop', queryParameters);
+          Uri.http(FlutterConfig.get('REST_URL'), '/shop', queryParameters);
       // print(uri);
       final result = await http.get(uri);
       _remainingProducts = json.decode(result.body)['count'];
@@ -160,20 +164,69 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void addProduct(Product product) {
-    final newProduct = Product(
-        id: DateTime.now().toString(),
-        name: product.name,
-        desc: product.desc,
-        price: product.price,
-        imageURL: product.imageURL,
-        rating: product.rating,
-        pages: product.pages,
-        quantity: product.quantity,
-        author: product.author,
-        isFav: product.isFav,
-        genre: product.genre);
-    _products.insert(0, newProduct);
-    notifyListeners();
+  void addProduct(Product product, PickedFile imageFile, String token) async {
+    try {
+      final newProduct = Product(
+          id: DateTime.now().toString(),
+          name: product.name,
+          desc: product.desc,
+          price: product.price,
+          imageURL: product.imageURL,
+          rating: product.rating,
+          pages: product.pages,
+          quantity: product.quantity,
+          author: product.author,
+          isFav: product.isFav,
+          genre: product.genre);
+      final details = {
+        'title': product.name,
+        'price': product.price,
+        'desc': product.desc,
+        'genre': product.genre,
+        'pages': product.pages,
+        'quantity': product.quantity,
+        'author': product.author,
+      };
+      // _products.insert(0, newProduct);
+      // print(newProduct);
+      // print(imageFile.path);
+      // notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      if (!prefs.containsKey('userData')) {
+        return;
+      }
+      final localUserData = json.decode(prefs.getString('userData') as String);
+      token = localUserData['token'];
+      print(token);
+      final result = await http.post(
+          Uri.https(
+            FlutterConfig.get('REST_URL'),
+            '/auth',
+          ),
+          headers: {
+            "content-type": "application/json",
+            "accept": "application/json",
+          },
+          body: json.encode({'token': token}));
+      final userId = json.decode(result.body)['_id'];
+      print(json.decode(result.body)['_id']);
+      final uri = (Uri.https(
+          FlutterConfig.get('REST_URL'), 'admin/addProduct/${userId}'));
+      print(uri);
+      var request = http.MultipartRequest('POST', uri);
+      request.headers.addAll({
+        "content-type": "multipart/form-data",
+      });
+      request.fields['data'] = json.encode(details);
+      request.files
+          .add(await http.MultipartFile.fromPath('file', imageFile.path));
+      // request.files.add(
+      //     await http.MultipartFile.fromPath('data', json.encode(detailes)));
+      print(request.files);
+      var response = await request.send();
+      // print(response.statusCode);
+    } catch (e) {
+      print(e);
+    }
   }
 }

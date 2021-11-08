@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           'pages': '',
           'quantity': '',
           'author': '',
-          'genre': 'Action and '
+          'genre': 'Action and Adventure'
         };
         _imageURLPreviewController.text = _editedProduct.imageURL;
       } else {
@@ -135,20 +136,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
     }
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     final isValid = _form.currentState!.validate();
     if (!isValid) {
       return;
     }
     print('Submitted');
+    final userToken = Provider.of<Auth>(context, listen: false).token;
     final productProvider = Provider.of<Products>(context, listen: false);
     _form.currentState!.save();
     if (_editedProduct.id != '') {
       productProvider.updateProducts(_editedProduct.id, _editedProduct);
     } else {
-      productProvider.addProduct(_editedProduct);
+      productProvider.addProduct(_editedProduct, _imageFile as PickedFile, userToken);
     }
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -366,70 +368,75 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       }
                       return null;
                     }),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      margin: const EdgeInsets.only(top: 8, right: 10),
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1, color: Colors.grey)),
-                      child: _imageURLPreviewController.text.isEmpty
-                          ? Text('Enter Image URL to preview!')
-                          : FittedBox(
-                              child: Image.network(
-                                  _imageURLPreviewController.text),
-                              fit: BoxFit.fill,
-                            ),
-                    ),
-                    Expanded(
-                      child: TextFormField(
-                          decoration: InputDecoration(labelText: 'Image URL'),
-                          keyboardType: TextInputType.url,
-                          textInputAction: TextInputAction.done,
-                          controller: _imageURLPreviewController,
-                          focusNode: _imageUrlFocusNode,
-                          onSaved: (value) {
-                            _editedProduct = Product(
-                              name: _editedProduct.name,
-                              desc: _editedProduct.desc,
-                              imageURL: value as String,
-                              price: _editedProduct.price,
-                              id: _editedProduct.id,
-                              isFav: _editedProduct.isFav,
-                              author: _editedProduct.author,
-                              pages: _editedProduct.pages,
-                              quantity: _editedProduct.quantity,
-                              rating: _editedProduct.rating,
-                              genre: _editedProduct.genre,
-                            );
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please Enter a value';
-                            }
-                            // if (!value.startsWith('http') &&
-                            //     !value.startsWith('https')) {
-                            //   return 'Please enter a valid URL';
-                            // }
-                            // if (!value.endsWith('png') &&
-                            //     !value.endsWith('.jpg') &&
-                            //     !value.endsWith('.jpeg')) {
-                            //   return 'Please enter an Image URL';
-                            // }
-                            return null;
-                          },
-                          onEditingComplete: () {
-                            setState(() {});
-                          },
-                          onFieldSubmitted: (value) {
-                            _submitForm();
-                          }),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   crossAxisAlignment: CrossAxisAlignment.end,
+                //   children: [
+                //     Container(
+                //       width: 100,
+                //       height: 100,
+                //       margin: const EdgeInsets.only(top: 8, right: 10),
+                //       decoration: BoxDecoration(
+                //           border: Border.all(width: 1, color: Colors.grey)),
+                //       child: _imageURLPreviewController.text.isEmpty
+                //           ? Text('Enter Image URL to preview!')
+                //           : FittedBox(
+                //               child: Image.network(
+                //                   _imageURLPreviewController.text),
+                //               fit: BoxFit.fill,
+                //             ),
+                //     ),
+                //     Expanded(
+                //       child: TextFormField(
+                //           decoration: InputDecoration(labelText: 'Image URL'),
+                //           keyboardType: TextInputType.url,
+                //           textInputAction: TextInputAction.done,
+                //           controller: _imageURLPreviewController,
+                //           focusNode: _imageUrlFocusNode,
+                //           onSaved: (value) {
+                //             _editedProduct = Product(
+                //               name: _editedProduct.name,
+                //               desc: _editedProduct.desc,
+                //               imageURL: value as String,
+                //               price: _editedProduct.price,
+                //               id: _editedProduct.id,
+                //               isFav: _editedProduct.isFav,
+                //               author: _editedProduct.author,
+                //               pages: _editedProduct.pages,
+                //               quantity: _editedProduct.quantity,
+                //               rating: _editedProduct.rating,
+                //               genre: _editedProduct.genre,
+                //             );
+                //           },
+                //           validator: (value) {
+                //             if (value!.isEmpty) {
+                //               return 'Please Enter a value';
+                //             }
+                //             // if (!value.startsWith('http') &&
+                //             //     !value.startsWith('https')) {
+                //             //   return 'Please enter a valid URL';
+                //             // }
+                //             // if (!value.endsWith('png') &&
+                //             //     !value.endsWith('.jpg') &&
+                //             //     !value.endsWith('.jpeg')) {
+                //             //   return 'Please enter an Image URL';
+                //             // }
+                //             return null;
+                //           },
+                //           onEditingComplete: () {
+                //             setState(() {});
+                //           },
+                //           onFieldSubmitted: (value) {
+                //             _submitForm();
+                //           }),
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: 10),
+                Text('Image: ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                        color: Colors.grey[850])),
                 Center(
                   child: Stack(children: [
                     Container(
