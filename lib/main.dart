@@ -2,6 +2,7 @@ import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/comments.dart';
 import 'package:emarting/Providers/orders.dart';
+import 'package:emarting/screens/addReviewScreen.dart';
 import 'package:emarting/screens/authScreen.dart';
 import 'package:emarting/screens/cartScreen.dart';
 import 'package:emarting/screens/editProductScreen.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
                 '/shop': (context) => ShopMainScreen(),
                 '/auth': (context) => AuthScreen(),
                 '/productDetails': (context) => ProductDetailesScreen(),
+                '/addReview': (context) => AddReviewScreen(),
                 '/favoriteProducts': (context) => FavoritesScreen(),
                 '/cart': (context) => CartScreen(),
                 '/orders': (context) => OrderScreen(),

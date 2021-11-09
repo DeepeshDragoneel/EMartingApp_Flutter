@@ -41,11 +41,28 @@ class _ProductReviewsState extends State<ProductReviews> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Customer Reviews',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                    ),
+                    child: Text('Customer Reviews',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/addReview',
+                          arguments: widget._productId);
+                    },
+                    icon: Icon(Icons.add_outlined),
+                  )
+                ],
+              ),
               SizedBox(height: 10),
               Container(
                 child: NotificationListener<ScrollNotification>(
