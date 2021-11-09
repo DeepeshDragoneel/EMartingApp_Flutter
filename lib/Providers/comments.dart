@@ -37,6 +37,7 @@ class Comments with ChangeNotifier {
   int _pageNumber = 0;
   int get remainingComments => _remainingComments;
   int get pageNumber => _pageNumber;
+  List<Comment> get comments => _comments;
 
   void setRemainingComments() {
     _remainingComments = 1;
@@ -84,7 +85,7 @@ class Comments with ChangeNotifier {
           )));
       // productReviews
       //     .forEach((item) => print('${item['googleUserId']['username']}'));
-      print(_comments[0].userName);
+      print(_comments[0].heading);
       notifyListeners();
     } catch (e) {
       print(e);

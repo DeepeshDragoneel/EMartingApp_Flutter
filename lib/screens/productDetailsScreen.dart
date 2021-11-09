@@ -124,7 +124,7 @@ class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '${productDetails.rating}',
+                              '${productDetails.rating.toStringAsFixed(1)}',
                               style: TextStyle(
                                   fontSize: 45, fontWeight: FontWeight.w100),
                             ),
