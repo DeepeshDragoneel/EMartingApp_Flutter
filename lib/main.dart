@@ -1,5 +1,6 @@
 import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
+import 'package:emarting/Providers/comments.dart';
 import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/screens/authScreen.dart';
 import 'package:emarting/screens/cartScreen.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => Products()),
           ChangeNotifierProvider(create: (context) => CartItems()),
           ChangeNotifierProvider(create: (context) => Orders()),
+          ChangeNotifierProvider(create: (context) => Comments()),
         ],
         child: Consumer<Auth>(
           builder: (context, authData, _) {

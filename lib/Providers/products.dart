@@ -87,7 +87,7 @@ class Products with ChangeNotifier {
       final result = await http.get(uri);
       _remainingProducts = json.decode(result.body)['count'];
       var shopProducts = json.decode(result.body)['products'];
-      print(json.decode(result.body)['products'][0]);
+      // print(json.decode(result.body)['products'][0]);
       //add every item of shopProducts to _products
       shopProducts.forEach((product) => _products.add(Product(
             id: product['_id'],

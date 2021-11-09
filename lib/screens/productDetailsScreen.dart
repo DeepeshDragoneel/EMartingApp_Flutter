@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:emarting/Providers/products.dart';
 import 'package:emarting/widgets/ProductReviews.dart';
 import 'package:emarting/widgets/footerProductDetails.dart';
@@ -202,7 +204,13 @@ class _ProductDetailesScreenState extends State<ProductDetailesScreen> {
                         ),
                         flex: 6),
                   ]),
-                  ProductReviews(),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    color: Colors.grey,
+                  ),
+                  ProductReviews(productDetails.id),
                 ])),
           ]),
         );

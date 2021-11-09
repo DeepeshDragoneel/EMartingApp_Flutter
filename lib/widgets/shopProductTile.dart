@@ -1,3 +1,4 @@
+import 'package:emarting/Providers/comments.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../Providers/product.dart';
@@ -47,6 +48,10 @@ class ShopProductTile extends StatelessWidget {
                       color: Colors.transparent,
                       child: new InkWell(
                         onTap: () {
+                          Provider.of<Comments>(context, listen: false)
+                              .setRemainingComments();
+                          Provider.of<Comments>(context, listen: false)
+                              .setPageNumber();
                           Navigator.of(context).pushNamed('/productDetails',
                               arguments: productInfo.id);
                         },
