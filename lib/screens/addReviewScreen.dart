@@ -1,5 +1,7 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class AddReviewScreen extends StatefulWidget {
   // const AddReviewScreen({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class AddReviewScreen extends StatefulWidget {
 class _AddReviewScreenState extends State<AddReviewScreen> {
   final _form = GlobalKey<FormState>();
   bool intialized = false;
+  String productId = '';
 
   var _initValues = {
     'title': '',
@@ -21,12 +24,14 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   @override
   void didChangeDependencies() {
     if (!intialized) {
-      final productId = ModalRoute.of(context)!.settings.arguments as String;
+      productId = ModalRoute.of(context)!.settings.arguments as String;
       if (productId != null) {
         _initValues = {
           'title': '',
           'description': '',
-          'rating': '',
+          'rating': '1',
+          'productId': productId,
+          'userId': Provider.of<Auth>(context, listen: false).userId,
         };
       }
       intialized = true;
@@ -39,8 +44,15 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     if (!isValid) {
       return;
     }
+    _form.currentState!.save();
+    // _initValues = {
+    //   'title': _initValues['title'] as String,
+    //   'description': _initValues['description'] as String,
+    //   'rating': _initValues['rating'] as String,
+    //   'productId': '1',
+    //   'userId': Provider.of<Auth>(context, listen: false).userId,
+    // };
     print(_initValues);
-
     // Navigator.of(context).pop();
   }
 

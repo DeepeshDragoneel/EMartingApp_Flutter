@@ -49,6 +49,30 @@ class Comments with ChangeNotifier {
     // notifyListeners();
   }
 
+  Future<void> postComments(Map<String, String> comments) async {
+    final body = {'data': comments};
+    print(body);
+    final url = Uri.http(
+      FlutterConfig.get('REST_URL'),
+      '/review',
+    );
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(body),
+    );
+    final responseData = json.decode(response.body);
+    if (response.statusCode == 200) {
+      print(responseData);
+      notifyListeners();
+    } else {
+      print(responseData);
+      throw Exception('Failed to post comments');
+    }
+  }
+
   Future<void> getAndSetComments(String id) async {
     try {
       print('yo from get! ${_remainingComments}');

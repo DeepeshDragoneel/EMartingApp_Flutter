@@ -10,11 +10,13 @@ class Auth with ChangeNotifier {
   String _userName = '';
   String _errorData = '';
   String _verificationData = '';
+  String _userId = '';
 
   String get errorData => _errorData;
   String get verificationData => _verificationData;
   String get token => _token;
   String get userName => _userName;
+  String get userId => _userId;
 
   Future<bool> get isAuthenticated async {
     final prefs = await SharedPreferences.getInstance();
@@ -30,6 +32,7 @@ class Auth with ChangeNotifier {
     final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
     final result = await http.post(uri,
         headers: {"Content-Type": "application/json"}, body: json.encode(body));
+    print(json.decode(result.body)['_id']);
     return result.body == 'ERROR' ? false : true;
   }
 
@@ -97,6 +100,15 @@ class Auth with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         final userData = json.encode({'token': _token, 'username': _userName});
         prefs.setString('userData', userData);
+        final body = {
+          'token': _token,
+        };
+        // print(body['token']);
+        final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
+        final res = await http.post(uri,
+            headers: {"Content-Type": "application/json"},
+            body: json.encode(body));
+        _userId = (json.decode(res.body)['_id']);
         // print(_token);
         notifyListeners();
       }
