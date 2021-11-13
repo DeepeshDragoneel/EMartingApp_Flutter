@@ -51,7 +51,7 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
     //     await Provider.of<Auth>(context, listen: false).getUerData();
     await Provider.of<Comments>(context, listen: false)
         .postComments(_initValues);
-    // Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override

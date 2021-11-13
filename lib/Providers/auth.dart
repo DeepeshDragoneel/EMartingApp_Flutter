@@ -32,7 +32,9 @@ class Auth with ChangeNotifier {
     final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
     final result = await http.post(uri,
         headers: {"Content-Type": "application/json"}, body: json.encode(body));
+    print('Auth method iD: ');
     print(json.decode(result.body)['_id']);
+    _userId = json.decode(result.body)['_id'];
     return result.body == 'ERROR' ? false : true;
   }
 

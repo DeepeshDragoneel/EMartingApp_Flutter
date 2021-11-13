@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_config/flutter_config.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class CartItem {
   final String id;
@@ -26,6 +29,28 @@ class CartItems with ChangeNotifier {
 
   int get cartItemsLength {
     return _cartItems.length;
+  }
+
+  Future<void> fetchAndSetCartItems(String id) async {
+    _cartItems = {};
+    final uri = Uri.http(FlutterConfig.get('REST_URL'), '/cart/${id}');
+    // print(uri);
+    final result = await http.get(uri);
+    // print(json.decode(result.body));
+    final cartProducts = json.decode(result.body);
+    print(cartProducts[0]);
+    cartProducts.forEach((product) {
+      _cartItems.putIfAbsent(
+          product['_id'],
+          () => CartItem(
+              id: product['productId']['_id'],
+              name: product['productId']['title'],
+              desc: product['productId']['desc'],
+              imageURL: product['productId']['image'],
+              quantity: product['quantity'],
+              price: product['productId']['price'].toDouble()));
+    });
+    notifyListeners();
   }
 
   void addItems(String productId, String name, String desc, String imageURL,

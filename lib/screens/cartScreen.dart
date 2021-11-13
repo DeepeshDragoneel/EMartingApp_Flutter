@@ -1,11 +1,32 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/orders.dart';
 import 'package:emarting/widgets/cartItemTile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
+
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  bool isInit = false;
+
+  @override
+  void didChangeDependencies() async {
+    if (!isInit) {
+      final userId = await Provider.of<Auth>(context, listen: false).userId;
+      print(userId);
+      await Provider.of<CartItems>(context, listen: false)
+          .fetchAndSetCartItems(userId);
+      isInit = true;
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartItemsInfo = Provider.of<CartItems>(context);
