@@ -1,4 +1,4 @@
-
+import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
 import 'package:emarting/Providers/product.dart';
 import 'package:emarting/Providers/products.dart';
@@ -17,6 +17,7 @@ class FooterProductDetails extends StatelessWidget {
     // final favProductInfo = Provider.of<Products>(context, listen: false)
     //     .findProductById(productId);
     final favProductInfo = Provider.of<Product>(context);
+    final userId = Provider.of<Auth>(context).userId;
     return Row(children: [
       Expanded(
         child: Container(
@@ -76,12 +77,7 @@ class FooterProductDetails extends StatelessWidget {
             onPressed: () {
               HapticFeedback.heavyImpact();
               if (!cartItemData.getCartAdded(favProductInfo.id)) {
-                cartItemData.addItems(
-                    favProductInfo.id,
-                    favProductInfo.name,
-                    favProductInfo.desc,
-                    favProductInfo.imageURL,
-                    favProductInfo.price);
+                cartItemData.addItems(userId, favProductInfo);
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Item added to Bag!'),
@@ -89,7 +85,8 @@ class FooterProductDetails extends StatelessWidget {
                     action: SnackBarAction(
                         label: 'UNDO',
                         onPressed: () {
-                          cartItemData.removeSingleCartItem(favProductInfo.id);
+                          cartItemData.removeCartItem(
+                              userId, favProductInfo.id, '');
                         })));
               } else {
                 Navigator.of(context).pushNamed('/cart');

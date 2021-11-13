@@ -1,3 +1,4 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:emarting/Providers/cart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class CartItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartItems = Provider.of<CartItems>(context);
+    final userId = Provider.of<Auth>(context).userId;
     return Dismissible(
       key: ValueKey(id),
       background: Container(
@@ -35,7 +37,7 @@ class CartItemTile extends StatelessWidget {
       ),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        cartItems.removeCartItem(productId);
+        cartItems.removeCartItem(userId, id, productId);
       },
       confirmDismiss: (direction) {
         return showCupertinoModalPopup(
@@ -123,6 +125,8 @@ class CartItemTile extends StatelessWidget {
                                                       Navigator.of(context)
                                                           .pop(true);
                                                       cartItems.removeCartItem(
+                                                          userId,
+                                                          id,
                                                           productId);
                                                     },
                                                     child: Text('Yes')),

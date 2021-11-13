@@ -1,3 +1,4 @@
+import 'package:emarting/Providers/product.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
@@ -53,11 +54,26 @@ class CartItems with ChangeNotifier {
     notifyListeners();
   }
 
-  void addItems(String productId, String name, String desc, String imageURL,
-      double price) {
-    if (_cartItems.containsKey(productId)) {
+  void addItems(String userId, Product product) async {
+    print(json.encode(product.id));
+    final url = Uri.http(
+      FlutterConfig.get('REST_URL'),
+      '/appCart/${userId}',
+    );
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'productId': product.id,
+      }),
+    );
+    final responseData = (response.statusCode);
+    print(responseData);
+    if (_cartItems.containsKey(product.id)) {
       _cartItems.update(
-          productId,
+          product.id,
           (value) => CartItem(
               id: value.id,
               name: value.name,
@@ -67,20 +83,37 @@ class CartItems with ChangeNotifier {
               price: value.price));
     } else {
       _cartItems.putIfAbsent(
-          productId,
+          product.id,
           () => CartItem(
               id: DateTime.now().toString(),
-              name: name,
-              desc: desc,
-              imageURL: imageURL,
+              name: product.name,
+              desc: product.desc,
+              imageURL: product.imageURL,
               quantity: 1,
-              price: price));
+              price: product.price));
     }
     notifyListeners();
   }
 
-  void removeCartItem(String productId) {
-    _cartItems.remove(productId);
+  void removeCartItem(String id, String productId, String cartId) async {
+    _cartItems.remove(cartId);
+    print(productId);
+    // print(cartId);
+    final url = Uri.http(
+      FlutterConfig.get('REST_URL'),
+      '/appCart/delete/${id}',
+    );
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'productId': productId,
+      }),
+    );
+    final responseData = (response.statusCode);
+    print(responseData);
     notifyListeners();
   }
 
