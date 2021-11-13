@@ -36,6 +36,24 @@ class Auth with ChangeNotifier {
     return result.body == 'ERROR' ? false : true;
   }
 
+  Future<Map<String, Object>> getUerData() async {
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return {};
+    }
+    final localUserData = json.decode(prefs.getString('userData') as String);
+
+    final body = {
+      'token': localUserData['token'],
+    };
+    // print(body['token']);
+    final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
+    final result = await http.post(uri,
+        headers: {"Content-Type": "application/json"}, body: json.encode(body));
+    // print(result.body);
+    return json.decode(result.body);
+  }
+
   void changeErrorAndVerifyMsg() {
     _errorData = '';
     _verificationData = '';

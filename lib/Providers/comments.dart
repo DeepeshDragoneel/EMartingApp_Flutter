@@ -1,4 +1,6 @@
+import 'package:emarting/Providers/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'product.dart';
 import 'package:http/http.dart' as http;
@@ -50,11 +52,32 @@ class Comments with ChangeNotifier {
   }
 
   Future<void> postComments(Map<String, String> comments) async {
-    final body = {'data': comments};
+    final prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey('userData')) {
+      return;
+    }
+    final localUserData = json.decode(prefs.getString('userData') as String);
+
+    final b = {
+      'token': localUserData['token'],
+    };
+    // print(body['token']);
+    final uri = Uri.https('emarting-backend-api.herokuapp.com', '/auth');
+    final result = await http.post(uri,
+        headers: {"Content-Type": "application/json"}, body: json.encode(b));
+    // print(result.body);
+    final body = {
+      'heading': comments['heading'],
+      'desc': comments['desc'],
+      'rating': comments['rating'],
+      'productId': comments['productId'],
+      'userId': json.decode(result.body)
+    };
+    print('--------------------------------------');
     print(body);
     final url = Uri.http(
       FlutterConfig.get('REST_URL'),
-      '/review',
+      '/appComment',
     );
     final response = await http.post(
       url,
@@ -64,6 +87,7 @@ class Comments with ChangeNotifier {
       body: json.encode(body),
     );
     final responseData = json.decode(response.body);
+    print(responseData);
     if (response.statusCode == 200) {
       print(responseData);
       notifyListeners();
@@ -75,7 +99,7 @@ class Comments with ChangeNotifier {
 
   Future<void> getAndSetComments(String id) async {
     try {
-      print('yo from get! ${_remainingComments}');
+      // print('yo from get! ${_remainingComments}');
       if (_remainingComments <= 0) {
         return;
       }
@@ -109,7 +133,7 @@ class Comments with ChangeNotifier {
           )));
       // productReviews
       //     .forEach((item) => print('${item['googleUserId']['username']}'));
-      print(_comments[0].heading);
+      // print(_comments[0].heading);
       notifyListeners();
     } catch (e) {
       print(e);

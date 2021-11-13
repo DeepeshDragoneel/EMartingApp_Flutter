@@ -1,4 +1,5 @@
 import 'package:emarting/Providers/auth.dart';
+import 'package:emarting/Providers/comments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
@@ -16,8 +17,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
   String productId = '';
 
   var _initValues = {
-    'title': '',
-    'description': '',
+    'heading': '',
+    'desc': '',
     'rating': '',
   };
 
@@ -27,8 +28,8 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       productId = ModalRoute.of(context)!.settings.arguments as String;
       if (productId != null) {
         _initValues = {
-          'title': '',
-          'description': '',
+          'heading': '',
+          'desc': '',
           'rating': '1',
           'productId': productId,
           'userId': Provider.of<Auth>(context, listen: false).userId,
@@ -45,14 +46,11 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
       return;
     }
     _form.currentState!.save();
-    // _initValues = {
-    //   'title': _initValues['title'] as String,
-    //   'description': _initValues['description'] as String,
-    //   'rating': _initValues['rating'] as String,
-    //   'productId': '1',
-    //   'userId': Provider.of<Auth>(context, listen: false).userId,
-    // };
-    print(_initValues);
+    // print(_initValues);
+    // _initValues['userId'] =
+    //     await Provider.of<Auth>(context, listen: false).getUerData();
+    await Provider.of<Comments>(context, listen: false)
+        .postComments(_initValues);
     // Navigator.of(context).pop();
   }
 
@@ -70,13 +68,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                 padding: EdgeInsets.all(20),
                 children: <Widget>[
                   TextFormField(
-                    initialValue: _initValues['title'],
+                    initialValue: _initValues['heading'],
                     decoration: InputDecoration(
                       labelText: 'Heading',
                     ),
                     textInputAction: TextInputAction.next,
                     onSaved: (value) {
-                      _initValues['title'] = value as String;
+                      _initValues['heading'] = value as String;
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -88,13 +86,13 @@ class _AddReviewScreenState extends State<AddReviewScreen> {
                     },
                   ),
                   TextFormField(
-                    initialValue: _initValues['description'],
+                    initialValue: _initValues['desc'],
                     decoration: InputDecoration(
-                      labelText: 'Description',
+                      labelText: 'desc',
                     ),
                     textInputAction: TextInputAction.next,
                     onSaved: (value) {
-                      _initValues['description'] = value as String;
+                      _initValues['desc'] = value as String;
                     },
                     validator: (value) {
                       if (value!.isEmpty) {
